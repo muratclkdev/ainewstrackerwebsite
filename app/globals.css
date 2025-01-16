@@ -2,19 +2,289 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Cursor Styles */
+body {
+  cursor: none;
+}
+
+a, button, input, textarea {
+  cursor: none;
+}
+
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  background: rgba(59, 130, 246, 0.3);
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.2s ease;
+}
+
+.custom-cursor.hover {
+  transform: scale(1.5);
+  background: rgba(139, 92, 246, 0.3);
+  border-color: #8b5cf6;
+}
+
+/* Hide cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body, a, button, input, textarea {
+    cursor: auto;
+  }
+  .custom-cursor {
+    display: none;
+  }
+}
+
 :root {
-  --foreground: #ffffff;
-  --background: #000000;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--background-end-rgb))
+  )
+  rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
+    @apply bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .telegram-button {
+    @apply relative flex items-center justify-center gap-2 px-8 py-3 overflow-hidden rounded-lg font-medium transition-all duration-300;
+    background: linear-gradient(45deg, #229ED9, #1e96cf, #1a8bc4);
+    background-size: 200% 200%;
+    animation: gradient 5s ease infinite;
+    box-shadow: 0 0 15px rgba(34, 158, 217, 0.2);
+  }
+
+  .telegram-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(34, 158, 217, 0.4);
+  }
+
+  .telegram-button:active {
+    transform: translateY(1px);
+  }
+
+  .telegram-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: 0.5s;
+  }
+
+  .telegram-button:hover::before {
+    left: 100%;
+  }
+
+  .telegram-icon {
+    @apply transition-transform duration-300;
+  }
+
+  .telegram-button:hover .telegram-icon {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .feature-card {
+    @apply relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border border-gray-800/50;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent
+    );
+    transition: 0.5s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+  }
+
+  .feature-card:hover::before {
+    left: 100%;
+  }
+
+  .feature-icon {
+    @apply relative w-12 h-12 mb-4 text-blue-400;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+  }
+
+  .feature-title {
+    @apply text-xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover .feature-title {
+    background-size: 200% 200%;
+    animation: gradient 2s ease infinite;
+  }
+
+  .feature-description {
+    @apply text-gray-400;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover .feature-description {
+    color: rgba(156, 163, 175, 1);
+  }
+
+  .glow-effect {
+    position: relative;
+  }
+
+  .glow-effect::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: inherit;
+  }
+
+  .feature-card:hover .glow-effect::after {
+    opacity: 0.15;
+  }
+
+  @keyframes float-icon {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .floating-icon {
+    animation: float-icon 3s ease-in-out infinite;
+  }
+
+  .about-card {
+    @apply relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent
+    );
+    transition: 0.5s;
+  }
+
+  .about-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+  }
+
+  .about-card:hover::before {
+    left: 100%;
+  }
+
+  .about-paragraph {
+    @apply text-gray-300 mb-6 last:mb-0;
+    transition: all 0.3s ease;
+  }
+
+  .about-card:hover .about-paragraph {
+    color: rgba(209, 213, 219, 1);
+  }
+
+  .about-glow {
+    position: relative;
+  }
+
+  .about-glow::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: inherit;
+  }
+
+  .about-card:hover .about-glow::after {
+    opacity: 0.15;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(-45deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(-45deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(-45deg);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
@@ -49,20 +319,4 @@ body {
 /* Card Hover Effect */
 .hover-card {
   @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
-}
-
-@keyframes float {
-  0% {
-    transform: rotate(-45deg) translateY(0px);
-  }
-  50% {
-    transform: rotate(-45deg) translateY(-20px);
-  }
-  100% {
-    transform: rotate(-45deg) translateY(0px);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
 }

@@ -4,44 +4,44 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'www.coindesk.com',
+        pathname: '/_next/image/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thecryptobasic.com',
+        pathname: '/wp-content/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cimg.co',
+        pathname: '/p/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.decrypt.co',
+        pathname: '/wp-content/themes/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'news.bitcoin.com',
+        pathname: '/images/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'crypto.news',
+        pathname: '/app/uploads/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'cimg.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'thecryptobasic.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.coindesk.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'seeklogo.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'u.today',
-        pathname: '/img/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'upload.wikimedia.org',
-        pathname: '/**',
+        pathname: '/wikipedia/commons/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'www.cloakcoin.com',
-        pathname: '/user/pages/partner/U.Today/**',
-      }
     ],
   },
 }
