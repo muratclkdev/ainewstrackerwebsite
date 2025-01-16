@@ -482,7 +482,7 @@ export default function Home() {
           {/* Arka plan logosu */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -right-40 top-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-5 transform -rotate-45">
-              <Image 
+          <Image
                 src="/images/logo.png" 
                 alt="Background Logo" 
                 fill
@@ -789,40 +789,48 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Powered by ChatGPT Section */}
+        {/* ChatGPT Section */}
         <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeInUp}
-          className="py-20 bg-gradient-to-b from-black to-gray-900"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="chatgpt-card bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-8 rounded-xl backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-all duration-300 my-20"
         >
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-                {content[lang].poweredBy}
-              </h2>
-              <p className="text-gray-400 mb-10">
-                {content[lang].poweredByDesc}
-              </p>
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700">
-                <div className="flex items-center justify-center gap-6">
-                  <div className="relative w-16 h-16">
-          <Image
-                      src="https://upload.wikimedia.org/wikipedia/commons/1/13/ChatGPT-Logo.png"
-                      alt="ChatGPT Logo"
-                      fill
-                      className="object-contain filter invert brightness-0 invert"
-                      sizes="64px"
-                    />
-                  </div>
-                  <div className="flex flex-col items-start">
-                    <span className="text-2xl font-semibold text-white">ChatGPT</span>
-                    <span className="text-sm text-gray-400">by OpenAI</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center text-center space-y-6"
+            >
+              <motion.h2
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+              >
+                Powered by ChatGPT
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-gray-300 max-w-2xl"
+              >
+                {lang === 'tr' 
+                  ? "AI News Tracker, ChatGPT'nin güçlü yapay zeka teknolojisini kullanarak size en güncel ve doğru kripto para haberlerini sunar."
+                  : "AI News Tracker delivers the most up-to-date and accurate crypto news using ChatGPT's powerful AI technology."
+                }
+              </motion.p>
+              <motion.img
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/ChatGPT-Logo.svg/180px-ChatGPT-Logo.svg.png"
+                alt="ChatGPT Logo"
+                className="w-24 h-24 object-contain filter invert brightness-0 invert hover:scale-110 transition-transform duration-300"
+              />
+            </motion.div>
           </div>
         </motion.section>
 
