@@ -405,32 +405,32 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-gray-800 backdrop-blur-sm"
+        className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-900 to-purple-900 border-b border-gray-800"
       >
         <div className="container mx-auto px-4 py-2">
           <div className="text-center">
-            <h3 className="text-lg font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+            <h3 className="text-lg font-bold mb-2 text-white">
               {content[lang].alphaAccess}
             </h3>
             <div className="flex justify-center items-center gap-6">
               <div className="text-center">
                 <span className="text-2xl font-bold text-white">{timeLeft.days}</span>
-                <p className="text-xs text-gray-400">{content[lang].days}</p>
+                <p className="text-xs text-gray-200">{content[lang].days}</p>
               </div>
-              <div className="text-xl font-bold text-gray-600">:</div>
+              <div className="text-xl font-bold text-gray-300">:</div>
               <div className="text-center">
                 <span className="text-2xl font-bold text-white">{timeLeft.hours}</span>
-                <p className="text-xs text-gray-400">{content[lang].hours}</p>
+                <p className="text-xs text-gray-200">{content[lang].hours}</p>
               </div>
-              <div className="text-xl font-bold text-gray-600">:</div>
+              <div className="text-xl font-bold text-gray-300">:</div>
               <div className="text-center">
                 <span className="text-2xl font-bold text-white">{timeLeft.minutes}</span>
-                <p className="text-xs text-gray-400">{content[lang].minutes}</p>
+                <p className="text-xs text-gray-200">{content[lang].minutes}</p>
               </div>
-              <div className="text-xl font-bold text-gray-600">:</div>
+              <div className="text-xl font-bold text-gray-300">:</div>
               <div className="text-center">
                 <span className="text-2xl font-bold text-white">{timeLeft.seconds}</span>
-                <p className="text-xs text-gray-400">{content[lang].seconds}</p>
+                <p className="text-xs text-gray-200">{content[lang].seconds}</p>
               </div>
             </div>
           </div>
