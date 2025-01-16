@@ -205,8 +205,8 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const targetDate = new Date();
-    targetDate.setMonth(targetDate.getMonth() + 1);
+    // 14 Şubat 2025 23:59:59
+    const targetDate = new Date('2025-02-14T23:59:59');
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -221,6 +221,8 @@ export default function Home() {
 
       if (distance < 0) {
         clearInterval(timer);
+        // Süre dolduğunda tüm değerleri 0 yap
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     }, 1000);
 
