@@ -626,9 +626,9 @@ a, button, input, textarea {
   @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
 }
 
-/* iPhone Mockup Styles */
+/* Modern Mockup Styles */
 .mockup-container {
-  perspective: 1000px;
+  perspective: 1500px;
   transform-style: preserve-3d;
   position: relative;
   width: 100%;
@@ -636,22 +636,80 @@ a, button, input, textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
 }
 
 .iphone-mockup {
   position: relative;
   width: 300px;
   height: 600px;
-  background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+  background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
   border-radius: 40px;
   padding: 8px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  transform: rotate(-5deg);
-  transition: transform 0.3s ease;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(59, 130, 246, 0.2),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  transform: 
+    perspective(1000px) 
+    rotateY(-15deg) 
+    rotateX(5deg);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: float 6s ease-in-out infinite;
+  position: relative;
+}
+
+.iphone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 40px;
+  background: linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.1),
+    rgba(139, 92, 246, 0.1)
+  );
+  z-index: -1;
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.iphone-mockup::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 42px;
+  background: linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.5),
+    rgba(139, 92, 246, 0.5)
+  );
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .iphone-mockup:hover {
-  transform: rotate(0deg) scale(1.02);
+  transform: 
+    perspective(1000px) 
+    rotateY(-5deg) 
+    rotateX(2deg) 
+    scale(1.05);
+  box-shadow: 
+    0 35px 60px -15px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(59, 130, 246, 0.3);
+}
+
+.iphone-mockup:hover::before,
+.iphone-mockup:hover::after {
+  opacity: 1;
 }
 
 .iphone-mockup img {
@@ -659,20 +717,136 @@ a, button, input, textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .mockup-container {
-    animation: float 6s ease-in-out infinite;
+.iphone-mockup:hover img {
+  transform: scale(1.02);
+}
+
+/* Notch tasarımı */
+.iphone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 25px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+/* Dynamic Island tasarımı */
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 25px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.dynamic-island::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
   }
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
+  0% {
+    transform: 
+      perspective(1000px) 
+      rotateY(-15deg) 
+      rotateX(5deg) 
+      translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: 
+      perspective(1000px) 
+      rotateY(-12deg) 
+      rotateX(3deg) 
+      translateY(-20px);
+  }
+  100% {
+    transform: 
+      perspective(1000px) 
+      rotateY(-15deg) 
+      rotateX(5deg) 
+      translateY(0);
+  }
+}
+
+/* Işık efekti */
+.light-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  border-radius: 32px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.iphone-mockup:hover .light-effect {
+  opacity: 1;
+}
+
+/* Responsive tasarım */
+@media (max-width: 768px) {
+  .iphone-mockup {
+    width: 250px;
+    height: 500px;
+    transform: none;
+    animation: floatMobile 4s ease-in-out infinite;
+  }
+
+  .iphone-mockup:hover {
+    transform: scale(1.05);
+  }
+
+  @keyframes floatMobile {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }
 
