@@ -371,11 +371,13 @@ a, button, input, textarea {
   }
 
   .telegram-button {
-    @apply relative flex items-center justify-center gap-2 px-8 py-3 overflow-hidden rounded-lg font-medium transition-all duration-300;
+    @apply relative flex items-center justify-center gap-3 px-8 py-4 overflow-hidden rounded-lg font-medium transition-all duration-300 w-full;
     background: linear-gradient(45deg, #229ED9, #1e96cf, #1a8bc4);
     background-size: 200% 200%;
     animation: gradient 5s ease infinite;
     box-shadow: 0 0 15px rgba(34, 158, 217, 0.2);
+    min-height: 60px;
+    font-size: 1.25rem;
   }
 
   .telegram-button:hover {
@@ -1133,4 +1135,18 @@ header button.active {
   background-color: #3b82f6;
   color: #ffffff;
   border-color: #3b82f6;
+}
+
+/* Mobil için ek stiller */
+@media (max-width: 640px) {
+  .telegram-button {
+    @apply px-4 py-5 text-xl w-full;
+    min-width: 100%;
+    min-height: 70px;
+    margin: 10px 0;
+  }
+  
+  .telegram-button .telegram-icon {
+    @apply w-7 h-7;
+  }
 }
