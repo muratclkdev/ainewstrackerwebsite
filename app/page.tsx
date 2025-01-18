@@ -64,6 +64,7 @@ type ContentType = {
     feedbackSuccess: string;
     lightMode: string;
     darkMode: string;
+    understood: string;
   }
 };
 
@@ -213,6 +214,8 @@ export default function Home() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
+  const [telegramInviteLink, setTelegramInviteLink] = useState('');
 
   useEffect(() => {
     // 14 Şubat 2025 23:59:59
@@ -274,6 +277,39 @@ export default function Home() {
     }
   };
 
+  const handleTelegramClick = async () => {
+    try {
+      const response = await fetch('/api/telegram', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to generate invite link');
+      }
+
+      setShowFeedbackMessage(true);
+      const feedbackSection = document.getElementById('feedback');
+      if (feedbackSection) {
+        feedbackSection.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Davet linkini state'e kaydet
+      setTelegramInviteLink(data.inviteLink);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Davet linki oluşturulamadı. Lütfen daha sonra tekrar deneyin.');
+    }
+  };
+
+  const handleMessageDismiss = () => {
+    setShowFeedbackMessage(false);
+    // Kaydedilen davet linkini kullan
+    if (telegramInviteLink) {
+      window.open(telegramInviteLink, '_blank');
+    }
+  };
+
   const content: ContentType = {
     tr: {
       title: "AI News Tracker",
@@ -322,11 +358,12 @@ export default function Home() {
       feedbackDesc: "Görüş ve önerileriniz bizim için değerli",
       feedbackName: "Adınız",
       feedbackEmail: "E-posta Adresiniz",
-      feedbackMessage: "Mesajınız",
+      feedbackMessage: "Kanala katıldıktan sonra deneyimlerinizi bizimle paylaşmayı unutmayın!",
       feedbackSubmit: "Gönder",
       feedbackSuccess: "Geribildiriminiz için teşekkürler!",
       lightMode: "Gündüz Modu",
       darkMode: "Gece Modu",
+      understood: "Anladım, şimdi KATIL",
     },
     en: {
       title: "AI News Tracker",
@@ -375,11 +412,12 @@ export default function Home() {
       feedbackDesc: "Your feedback is valuable to us",
       feedbackName: "Your Name",
       feedbackEmail: "Your Email",
-      feedbackMessage: "Your Message",
+      feedbackMessage: "After joining the channel, don't forget to share your experiences with us!",
       feedbackSubmit: "Submit",
       feedbackSuccess: "Thank you for your feedback!",
       lightMode: "Light Mode",
       darkMode: "Dark Mode",
+      understood: "Got it, JOIN now",
     }
   };
 
@@ -539,32 +577,35 @@ export default function Home() {
         >
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+              <div className="flex-1 space-y-8">
+                <motion.h1
+                  variants={fadeInUp}
+                  className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text"
+                >
                   {content[lang].title}
-                </h1>
-                <p className="text-xl text-gray-300 mb-8">
+                </motion.h1>
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-xl text-gray-300"
+                >
                   {content[lang].description}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Link
-                    href="https://t.me/ainewstracker"
-                    target="_blank"
-                    className="telegram-button"
-                  >
-                    {content[lang].telegram}
-                  </Link>
-                </div>
+                </motion.p>
+                <motion.button
+                  variants={fadeInUp}
+                  onClick={handleTelegramClick}
+                  className="telegram-button"
+                >
+                  {content[lang].telegram}
+                </motion.button>
               </div>
-              <div className="flex-1 relative">
+              <div className="flex-1">
                 <div className="mockup-container">
                   <div className="iphone-mockup">
                     <Image
                       src="/images/screenshot.jpg"
                       alt="AI News Tracker Screenshot"
-                      width={300}
-                      height={600}
-                      className="rounded-[32px]"
+                      fill
+                      className="rounded-[38px] object-cover"
                       priority
                     />
                   </div>
@@ -714,7 +755,7 @@ export default function Home() {
                     className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#F0B90B] to-[#F8D12F] hover:from-[#F0B90B]/90 hover:to-[#F8D12F]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7.64 13.406l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.323 2.324-2.324-2.324-2.324L7.64 8.76 5.316 6.435 3 8.76l2.316 2.323L3 13.406l2.316 2.324 2.324-2.324zm8.747 0l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324-2.324zM7.64 19.085l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324-2.324z"/>
+                      <path d="M7.64 13.406l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.323 2.324-2.324-2.324-2.324L7.64 8.76 5.316 6.435 3 8.76l2.316 2.323L3 13.406l2.316 2.324 2.324-2.324zm8.747 0l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324 2.324-2.324zM7.64 19.085l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324 2.324-2.324z"/>
                     </svg>
                     {content[lang].binancePay}
                   </Link>
@@ -913,21 +954,29 @@ export default function Home() {
         </motion.section>
 
         {/* Feedback Section */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeInUp}
-          className="py-20 bg-black"
-        >
+        <section id="feedback" className="py-24 relative overflow-hidden">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+            <h2 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
               {content[lang].feedback}
             </h2>
-            <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+            <p className="text-center text-gray-300 mb-12">
               {content[lang].feedbackDesc}
             </p>
-            
+            {showFeedbackMessage && (
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-50 flex items-center gap-4"
+              >
+                <p>{content[lang].feedbackMessage}</p>
+                <button
+                  onClick={handleMessageDismiss}
+                  className="bg-white text-blue-500 px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+                >
+                  {content[lang].understood}
+                </button>
+              </motion.div>
+            )}
             <div className="max-w-2xl mx-auto">
               {isSubmitted ? (
                 <div className="text-center p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700">
@@ -988,7 +1037,7 @@ export default function Home() {
               )}
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Üçüncü Reklam Alanı */}
         <div className="py-8 text-center">
