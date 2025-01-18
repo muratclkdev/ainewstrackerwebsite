@@ -9,6 +9,10 @@ import emailjs from '@emailjs/browser';
 declare global {
   interface Window {
     adsbygoogle: any[];
+    ethereum: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      selectedAddress: string;
+    };
   }
 }
 
@@ -65,6 +69,8 @@ type ContentType = {
     lightMode: string;
     darkMode: string;
     understood: string;
+    binanceDonate: string;
+    metamaskDonate: string;
   }
 };
 
@@ -203,6 +209,32 @@ const CustomCursor = () => {
   );
 };
 
+const walletAddresses = {
+  BTC: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+  ETH: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+  BNB: 'bnb1grpf0955h0ykzq3ar5nmum7y6gdfl6lxfn46h2',
+  USDT: 'TYsbWxpqPZhpjfJhWHNR2XQTYm24VEz1p1',
+  SOL: '8ZUmRXsphHp5c6ZMc3SqYJ2pEop8x4fVyojhJ6ZHyGE7',  // Solana
+  XRP: 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh',  // Ripple
+  TRX: 'TYsbWxpqPZhpjfJhWHNR2XQTYm24VEz1p1'  // Tron
+};
+
+const handleCryptoSelect = (coin: keyof typeof walletAddresses) => {
+  const address = walletAddresses[coin];
+  navigator.clipboard.writeText(address);
+  alert(`${coin} adresi kopyalandı: ${address}`);
+};
+
+const handleDexRedirect = (dex: '1inch' | 'uniswap') => {
+  const dexUrls = {
+    '1inch': 'https://app.1inch.io/',
+    'uniswap': 'https://app.uniswap.org/',
+  } as const;
+  window.open(dexUrls[dex], '_blank');
+};
+
+const BINANCE_PAY_ID = '40173249';
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
   const [theme, setTheme] = useState<Theme>('dark');
@@ -216,6 +248,7 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
   const [telegramInviteLink, setTelegramInviteLink] = useState('');
+  const [showQRModal, setShowQRModal] = useState(false);
 
   useEffect(() => {
     // 14 Şubat 2025 23:59:59
@@ -310,6 +343,65 @@ export default function Home() {
     }
   };
 
+  const closeQRModal = () => {
+    setShowQRModal(false);
+  };
+
+  const handleBinanceDonate = () => {
+    setShowQRModal(true);
+  };
+
+  const handleCopyBinanceId = () => {
+    navigator.clipboard.writeText(BINANCE_PAY_ID);
+    alert('Binance Pay ID kopyalandı: ' + BINANCE_PAY_ID);
+  };
+
+  const handleMetamaskDonate = async () => {
+    const YOUR_ADDRESS = '0xa1B371D85d037787859D71E456ED144dBa35B471';
+
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Cüzdanı bağla
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts'
+        });
+
+        // Mevcut ağ bilgisini al
+        const chainId = await window.ethereum.request({
+          method: 'eth_chainId'
+        });
+
+        // Desteklenen ağlar ve token'lar
+        const networks = {
+          '0x1': 'Ethereum Mainnet',
+          '0x89': 'Polygon',
+          '0x38': 'BNB Smart Chain',
+          '0xa86a': 'Avalanche',
+          '0xfa': 'Fantom'
+        };
+
+        // Kullanıcı bağlı olduğu ağda işlem yapabilir
+        const currentNetwork = networks[chainId as keyof typeof networks] || 'Unknown Network';
+
+        // İşlemi gönder
+        await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: accounts[0],
+            to: YOUR_ADDRESS,
+            // value parametresi kullanıcı tarafından MetaMask arayüzünde belirlenecek
+          }]
+        });
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert(lang === 'tr' ? 'Bir hata oluştu. Lütfen tekrar deneyin.' : 'An error occurred. Please try again.');
+      }
+    } else {
+      window.open('https://metamask.io/download/', '_blank');
+    }
+  };
+
   const content: ContentType = {
     tr: {
       title: "AI News Tracker",
@@ -364,6 +456,8 @@ export default function Home() {
       lightMode: "Gündüz Modu",
       darkMode: "Gece Modu",
       understood: "Anladım, şimdi KATIL",
+      binanceDonate: "Binance ile Bağış Yap",
+      metamaskDonate: "Metamask ile Bağış Yap",
     },
     en: {
       title: "AI News Tracker",
@@ -418,6 +512,8 @@ export default function Home() {
       lightMode: "Light Mode",
       darkMode: "Dark Mode",
       understood: "Got it, JOIN now",
+      binanceDonate: "Donate with Binance",
+      metamaskDonate: "Donate with Metamask",
     }
   };
 
@@ -467,6 +563,7 @@ export default function Home() {
   return (
     <main className={`min-h-screen ${theme === 'light' ? 'light-theme' : ''}`}>
       <CustomCursor />
+      
       {/* Countdown Section */}
       <motion.div
         initial="hidden"
@@ -601,7 +698,7 @@ export default function Home() {
               <div className="flex-1">
                 <div className="mockup-container">
                   <div className="iphone-mockup">
-                    <Image
+          <Image
                       src="/images/screenshot.jpg"
                       alt="AI News Tracker Screenshot"
                       fill
@@ -733,32 +830,42 @@ export default function Home() {
                     className="flex items-center justify-center gap-2 bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.501-.297-.302-.393-.77-.177-1.146.154-.267.415-.456.692-.58.36-.162.737-.284 1.123-.366 1.075-.238 2.189-.331 3.287-.37 1.218-.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.365 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                      <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.501-.297-.302-.393-.77-.177-1.146.154-.267.415-.456.692-.58.36-.162.737-.284 1.123-.366 1.075-.238 2.189-.331 3.287-.37 1.218-.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
                     </svg>
                     {content[lang].buyMeACoffee}
                   </Link>
 
-                  <Link 
-                    href="https://commerce.coinbase.com/checkout/YOUR-CHECKOUT-ID" 
-                    target="_blank"
-                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9900] to-[#FF7700] hover:from-[#FF9900]/90 hover:to-[#FF7700]/90 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M23.638 14.904l-1.327-.728a.249.249 0 01-.124-.216V9.044c0-.09.048-.172.124-.216l1.327-.728a.249.249 0 01.372.216v6.372a.249.249 0 01-.372.216zM17.98 19.036l-.372.216-3.992 2.16a.249.249 0 01-.372-.216V3.804c0-.09.048-.172.124-.216l3.992-2.16a.249.249 0 01.372.216v17.176a.249.249 0 01-.124.216zM9.676 19.036l-.372.216-3.992 2.16a.249.249 0 01-.372-.216V3.804c0-.09.048-.172.124-.216l3.992-2.16a.249.249 0 01.372.216v17.176a.249.249 0 01-.124.216zM.372 14.904L0 15.12V8.88l.372.216 1.327.728a.249.249 0 01.124.216v4.916a.249.249 0 01-.124.216l-1.327.728z"/>
-                    </svg>
-                    {content[lang].cryptoDonate}
-                  </Link>
+                  <div className="relative">
+                    <button
+                      onClick={handleBinanceDonate}
+                      className="flex items-center justify-center gap-2 bg-[#F0B90B] hover:bg-[#F0B90B]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full mb-4"
+                    >
+                      <Image
+                        src="https://public.bnbstatic.com/20190405/eb2349c3-b2f8-4a93-a286-8f86a62ea9d8.png"
+                        alt="Binance"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5"
+                        unoptimized
+                      />
+                      {content[lang].binanceDonate}
+                    </button>
 
-                  <Link 
-                    href="https://www.binance.com/en/pay"
-                    target="_blank"
-                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#F0B90B] to-[#F8D12F] hover:from-[#F0B90B]/90 hover:to-[#F8D12F]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7.64 13.406l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.323 2.324-2.324-2.324-2.324L7.64 8.76 5.316 6.435 3 8.76l2.316 2.323L3 13.406l2.316 2.324 2.324-2.324zm8.747 0l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324 2.324-2.324zM7.64 19.085l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324 2.324-2.324z"/>
-                    </svg>
-                    {content[lang].binancePay}
-                  </Link>
+                    <button
+                      onClick={handleMetamaskDonate}
+                      className="flex items-center justify-center gap-2 bg-[#E2761B] hover:bg-[#E2761B]/90 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
+                    >
+                      <Image
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/2048px-MetaMask_Fox.svg.png"
+                        alt="Metamask"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5"
+                        unoptimized
+                      />
+                      {content[lang].metamaskDonate}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -833,7 +940,7 @@ export default function Home() {
                   url: 'https://thecryptobasic.com/' 
                 },
                 { 
-                  name: 'Crypto News', 
+                  name: 'Cryptonews', 
                   logo: 'https://cimg.co/p/2/crypto-news-logo-full.svg',
                   url: 'https://cryptonews.com/' 
                 },
@@ -875,7 +982,7 @@ export default function Home() {
                   >
                     <div className="flex flex-col items-center justify-center h-full">
                       <div className="relative w-24 h-24 mb-4">
-                        <Image
+          <Image
                           src={source.logo}
                           alt={source.name}
                           fill
@@ -1065,8 +1172,49 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </footer>
-      </div>
+      </footer>
+
+        {/* Binance Pay QR Modal */}
+        {showQRModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+            <div className="relative bg-gray-900 p-6 rounded-2xl max-w-sm w-full mx-4">
+              <button
+                onClick={closeQRModal}
+                className="absolute top-2 right-2 text-gray-400 hover:text-white"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              <div className="text-center">
+                <h3 className="text-xl font-bold mb-4">Binance Pay QR Kod</h3>
+                <div className="relative w-full aspect-square mb-4">
+                  <Image
+                    src="/images/binance.jpg"
+                    alt="Binance Pay QR Code"
+                    fill
+                    className="object-contain rounded-xl"
+                  />
+                </div>
+                <p className="text-sm text-gray-400 mb-2">veya</p>
+                <div className="flex items-center justify-center gap-2 bg-gray-800 p-2 rounded-lg">
+                  <span className="text-sm">Binance Pay ID:</span>
+                  <button
+                    onClick={handleCopyBinanceId}
+                    className="flex items-center gap-1 text-blue-400 hover:text-blue-300"
+                  >
+                    {BINANCE_PAY_ID}
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+    </div>
     </main>
   );
 }
