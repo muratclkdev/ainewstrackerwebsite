@@ -2,6 +2,327 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #000000;
+  --text: #ffffff;
+  --border: #1f2937;
+  --card-bg: rgba(17, 24, 39, 0.8);
+  --hover-bg: rgba(31, 41, 55, 0.8);
+  --header-bg: rgba(0, 0, 0, 0.8);
+  --countdown-from: #1e3a8a;
+  --countdown-to: #581c87;
+  --section-bg: #000000;
+  --section-gradient: linear-gradient(to bottom, #000000, #111827);
+  --logo-filter: invert brightness-0 invert;
+  --logo-invert: 1;
+  --logo-brightness: 0;
+  --button-bg: #1f2937;
+  --button-text: #ffffff;
+  --button-hover: #374151;
+}
+
+.light-theme {
+  --background: #f8fafc;
+  --text: #1e293b;
+  --border: #e2e8f0;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --hover-bg: rgba(241, 245, 249, 0.95);
+  --header-bg: rgba(248, 250, 252, 0.9);
+  --countdown-from: #3b82f6;
+  --countdown-to: #8b5cf6;
+  --section-bg: #ffffff;
+  --section-gradient: linear-gradient(to bottom, #ffffff, #f1f5f9);
+  --footer-bg: #f1f5f9;
+  --footer-text: #475569;
+  --footer-link: #3b82f6;
+  --footer-border: #e2e8f0;
+  --logo-invert: 0;
+  --logo-brightness: 0;
+  --button-bg: #ffffff;
+  --button-text: #1e293b;
+  --button-hover: #f8fafc;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+/* Tema geçişleri için yumuşak animasyon */
+*, *::before, *::after {
+  transition: background-color 0.4s ease-in-out, 
+              color 0.3s ease-in-out, 
+              border-color 0.3s ease-in-out,
+              transform 0.3s ease-in-out;
+}
+
+/* Kartlar için tema desteği */
+.feature-card,
+.about-card,
+.chatgpt-card,
+.team-card,
+.feedback-card {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease-in-out;
+}
+
+.feature-card:hover,
+.about-card:hover,
+.chatgpt-card:hover,
+.team-card:hover,
+.feedback-card:hover {
+  background-color: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Light tema için özel gölgeler ve stiller */
+.light-theme .feature-card,
+.light-theme .about-card,
+.light-theme .chatgpt-card,
+.light-theme .team-card,
+.light-theme .feedback-card {
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.light-theme .feature-card:hover,
+.light-theme .about-card:hover,
+.light-theme .chatgpt-card:hover,
+.light-theme .team-card:hover,
+.light-theme .feedback-card:hover {
+  box-shadow: 0 8px 24px rgba(148, 163, 184, 0.15);
+  border-color: #3b82f6;
+}
+
+/* Footer için tema desteği */
+.light-theme footer {
+  background-color: var(--footer-bg);
+  border-color: var(--footer-border);
+}
+
+.light-theme footer p {
+  color: var(--footer-text);
+}
+
+.light-theme footer a {
+  color: var(--footer-text);
+}
+
+.light-theme footer a:hover {
+  color: var(--footer-link);
+}
+
+/* Özellikler bölümü için tema desteği */
+.light-theme .feature-icon {
+  color: #3b82f6;
+}
+
+.light-theme .feature-title {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.light-theme .feature-description {
+  color: #475569;
+}
+
+/* Takım bölümü için tema desteği */
+.light-theme .team-role {
+  color: #475569;
+}
+
+.light-theme .team-social a {
+  color: #3b82f6;
+}
+
+.light-theme .team-social a:hover {
+  color: #2563eb;
+}
+
+/* Geri bildirim formu için tema desteği */
+.light-theme input,
+.light-theme textarea {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.light-theme input:focus,
+.light-theme textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.light-theme input::placeholder,
+.light-theme textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* Hakkımızda bölümü için tema desteği */
+.light-theme .about-content {
+  color: #475569;
+}
+
+.light-theme .about-content p {
+  margin-bottom: 1rem;
+}
+
+/* Bölüm başlıkları için tema desteği */
+.light-theme section h2 {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.light-theme section h3 {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.light-theme section p.section-description {
+  color: #475569;
+}
+
+/* Haber Kaynakları bölümü için tema desteği */
+.light-theme .news-sources {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+.light-theme .news-sources-grid a {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+.light-theme .news-sources-grid a:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.light-theme .news-sources-grid span {
+  color: #1e293b;
+}
+
+/* Takım kartı için tema desteği */
+.light-theme .team-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+.light-theme .team-card:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.light-theme .team-card h3 {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.light-theme .team-card p {
+  color: #475569;
+}
+
+.light-theme .team-social a {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.light-theme .team-social a:hover {
+  background: #3b82f6;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Geri bildirim formu için tema desteği */
+.light-theme .feedback-section {
+  background-color: var(--section-bg);
+}
+
+.light-theme .feedback-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
+  border: 1px solid #e2e8f0;
+}
+
+.light-theme .feedback-card input,
+.light-theme .feedback-card textarea {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.light-theme .feedback-card input:focus,
+.light-theme .feedback-card textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.light-theme .feedback-card input::placeholder,
+.light-theme .feedback-card textarea::placeholder {
+  color: #94a3b8;
+}
+
+.light-theme .feedback-card button {
+  background: linear-gradient(45deg, #3b82f6, #2563eb);
+  color: #ffffff;
+}
+
+.light-theme .feedback-card button:hover {
+  background: linear-gradient(45deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Sosyal medya butonları için tema desteği */
+.light-theme .social-buttons a {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.light-theme .social-buttons a:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.light-theme .social-buttons svg {
+  color: #3b82f6;
+}
+
+/* Hakkımızda bölümü için tema desteği */
+.light-theme .about-section {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+.light-theme .about-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
+  border: 1px solid #e2e8f0;
+}
+
+.light-theme .about-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.light-theme .about-card p {
+  color: #475569;
+}
+
+.light-theme .about-card:hover p {
+  color: #1e293b;
+}
+
 /* Custom Cursor Styles */
 body {
   cursor: none;
@@ -38,22 +359,6 @@ a, button, input, textarea {
   .custom-cursor {
     display: none;
   }
-}
-
-:root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -319,4 +624,343 @@ body {
 /* Card Hover Effect */
 .hover-card {
   @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
+
+/* iPhone Mockup Styles */
+.mockup-container {
+  perspective: 1000px;
+}
+
+.iphone-mockup {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  border: 8px solid #1a1a1a;
+  overflow: hidden;
+}
+
+.iphone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 24px;
+  background: #1a1a1a;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 2;
+}
+
+.mockup-container:hover .iphone-mockup {
+  transform: rotateY(-15deg) rotateX(5deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mockup-container {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Header ve Countdown için tema desteği */
+header {
+  background-color: var(--header-bg) !important;
+  backdrop-filter: blur(8px);
+}
+
+.countdown-section {
+  background: linear-gradient(to right, var(--countdown-from), var(--countdown-to)) !important;
+}
+
+/* Theme Toggle Switch */
+.theme-switch {
+  @apply relative w-16 h-8 rounded-full p-1;
+  background: #1e293b;
+  border: 2px solid #334155;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.light-theme .theme-switch {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.theme-switch:hover {
+  border-color: #3b82f6;
+}
+
+.theme-switch .theme-icons {
+  @apply absolute inset-0 w-full h-full flex items-center justify-between px-2;
+  z-index: 1;
+}
+
+.theme-switch .theme-icons svg {
+  @apply w-4 h-4;
+  color: #94a3b8;
+}
+
+.theme-switch[data-theme="dark"] .theme-icons svg:first-child {
+  color: #312e81;
+}
+
+.theme-switch[data-theme="light"] .theme-icons svg:last-child {
+  color: #fbbf24;
+}
+
+.theme-switch .switch-handle {
+  @apply absolute w-6 h-6 rounded-full flex items-center justify-center;
+  background: #60a5fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  left: 2px;
+}
+
+.theme-switch[data-theme="dark"] .switch-handle {
+  transform: translateX(0);
+  background: #312e81;
+}
+
+.theme-switch[data-theme="light"] .switch-handle {
+  transform: translateX(32px);
+  background: #fbbf24;
+}
+
+.theme-switch .switch-icon {
+  @apply w-4 h-4 text-white;
+  transition: all 0.3s ease;
+}
+
+.theme-switch:hover .switch-icon {
+  transform: rotate(360deg);
+}
+
+/* Section'lar için tema desteği */
+.bg-gradient-to-b {
+  background: var(--section-gradient) !important;
+}
+
+section {
+  background-color: var(--section-bg);
+}
+
+/* Light tema için özel stiller */
+.light-theme section {
+  color: var(--text);
+  background: var(--section-bg);
+}
+
+.light-theme .bg-gradient-to-b {
+  background: var(--section-gradient) !important;
+}
+
+.light-theme .bg-gradient-to-b.from-black,
+.light-theme .bg-gradient-to-b.from-gray-900,
+.light-theme .bg-gradient-to-b.to-black,
+.light-theme .bg-gradient-to-b.to-gray-900,
+.light-theme .bg-gradient-to-b.via-gray-800 {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc) !important;
+}
+
+.light-theme .section-gradient {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+/* Haber Kaynakları bölümü için tema desteği */
+.light-theme .news-sources {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+/* Hakkımızda bölümü için tema desteği */
+.light-theme .about-section {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+.light-theme .feature-card,
+.light-theme .about-card,
+.light-theme .chatgpt-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.light-theme .feature-icon svg {
+  stroke: var(--text);
+}
+
+.light-theme .feature-title,
+.light-theme .about-title,
+.light-theme h2,
+.light-theme h3 {
+  color: var(--text);
+}
+
+.light-theme .feature-description,
+.light-theme .about-description,
+.light-theme p {
+  color: #475569;
+}
+
+/* Logo ve resimler için tema desteği */
+.light-theme img,
+.light-theme Image {
+  filter: var(--logo-filter);
+}
+
+/* News source logos için özel stil */
+.news-source-logo {
+  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
+  transition: all 0.3s ease;
+}
+
+/* Özellikler kartları için tema desteği */
+.light-theme .feature-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+.light-theme .feature-card:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.light-theme .feature-icon {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.light-theme .feature-title {
+  color: #1e293b;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.light-theme .feature-description {
+  color: #475569;
+  margin-top: 0.5rem;
+}
+
+/* Takım kartı için tema desteği */
+.light-theme .team-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+.light-theme .team-card:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.light-theme .team-card h3 {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.light-theme .team-card p {
+  color: #475569;
+}
+
+.light-theme .team-social a {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.light-theme .team-social a:hover {
+  background: #3b82f6;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Glow efekti için güncelleme */
+.light-theme .glow-effect::after {
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+  opacity: 0;
+}
+
+.light-theme .glow-effect:hover::after {
+  opacity: 1;
+}
+
+/* Kartların arka plan renkleri */
+.light-theme .bg-gradient-to-br.from-gray-800.to-gray-900 {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0;
+}
+
+/* Navbar logo için özel stil */
+.navbar-logo {
+  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
+  transition: all 0.3s ease;
+}
+
+.light-theme .navbar-logo {
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.8));
+}
+
+/* News source logos için özel stil */
+.news-source-logo {
+  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
+  transition: all 0.3s ease;
+}
+
+.light-theme .news-source-logo {
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.8));
+}
+
+/* Dil seçenekleri butonları için tema desteği */
+header button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+header button:hover {
+  background-color: var(--button-hover);
+  border-color: #3b82f6;
+}
+
+/* Aktif dil butonu için stil */
+header button.active {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.light-theme header button.active {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
 }

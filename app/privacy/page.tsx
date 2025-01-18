@@ -1,33 +1,38 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { CustomCursor } from '../components/CustomCursor';
 import { TypewriterText } from '../components/TypewriterText';
 
 type Lang = 'tr' | 'en';
+type Theme = 'light' | 'dark';
 
 type ContentType = {
   [key in Lang]: {
     title: string;
-    lastUpdated: string;
-    sections: {
-      title: string;
-      content: string;
-    }[];
-    backToHome: string;
+    dataCollection: string;
+    dataCollectionDesc: string[];
+    dataUsage: string;
+    dataUsageDesc: string[];
+    security: string;
+    securityDesc: string[];
+    cookies: string;
+    cookiesDesc: string[];
     alphaAccess: string;
     days: string;
     hours: string;
     minutes: string;
     seconds: string;
+    lightMode: string;
+    darkMode: string;
   }
 };
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0,
@@ -40,6 +45,7 @@ const fadeInUp = {
 
 export default function Privacy() {
   const [lang, setLang] = useState<Lang>('tr');
+  const [theme, setTheme] = useState<Theme>('dark');
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -71,111 +77,91 @@ export default function Privacy() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-theme', theme === 'light');
+  }, [theme]);
+
   const content: ContentType = {
     tr: {
       title: "Gizlilik Politikası",
-      lastUpdated: "Son Güncelleme: 16 Ocak 2024",
-      sections: [
-        {
-          title: "Veri Toplama",
-          content: "AI News Tracker olarak, kullanıcılarımızın gizliliğine önem veriyoruz. Platformumuzda sadece haber takibi için gerekli olan minimum düzeyde veri toplamaktayız."
-        },
-        {
-          title: "Veri Kullanımı",
-          content: "Toplanan veriler, haber özelleştirme ve platform iyileştirme amacıyla kullanılmaktadır. Verileriniz üçüncü taraflarla paylaşılmamaktadır."
-        },
-        {
-          title: "Veri Güvenliği",
-          content: "Kullanıcı verilerinin güvenliği için endüstri standardı güvenlik önlemleri uygulanmaktadır."
-        },
-        {
-          title: "Çerezler",
-          content: "Platform deneyimini iyileştirmek için çerezler kullanılmaktadır. Tarayıcı ayarlarınızdan çerez tercihlerinizi yönetebilirsiniz."
-        }
+      dataCollection: "Veri Toplama",
+      dataCollectionDesc: [
+        "Kullanıcılarımızın gizliliği bizim için önemlidir.",
+        "Sadece gerekli olan minimum bilgiyi toplarız.",
+        "Toplanan veriler güvenli bir şekilde saklanır."
       ],
-      backToHome: "Ana Sayfaya Dön",
+      dataUsage: "Veri Kullanımı",
+      dataUsageDesc: [
+        "Verileriniz sadece hizmet kalitesini artırmak için kullanılır.",
+        "Üçüncü taraflarla paylaşılmaz.",
+        "İstatistiksel analizler için anonim olarak kullanılabilir."
+      ],
+      security: "Güvenlik",
+      securityDesc: [
+        "En son güvenlik protokolleri kullanılır.",
+        "Düzenli güvenlik kontrolleri yapılır.",
+        "Verileriniz şifrelenerek saklanır."
+      ],
+      cookies: "Çerezler",
+      cookiesDesc: [
+        "Daha iyi bir deneyim için çerezler kullanılır.",
+        "Çerezler tarayıcınızdan devre dışı bırakılabilir.",
+        "Zorunlu olmayan çerezler için izniniz alınır."
+      ],
       alphaAccess: "Alfa Sürümüne Katıl",
       days: "Gün",
       hours: "Saat",
       minutes: "Dakika",
-      seconds: "Saniye"
+      seconds: "Saniye",
+      lightMode: "Gündüz Modu",
+      darkMode: "Gece Modu"
     },
     en: {
       title: "Privacy Policy",
-      lastUpdated: "Last Updated: January 16, 2024",
-      sections: [
-        {
-          title: "Data Collection",
-          content: "At AI News Tracker, we value our users' privacy. We collect only the minimum amount of data necessary for news tracking on our platform."
-        },
-        {
-          title: "Data Usage",
-          content: "Collected data is used for news customization and platform improvement purposes. Your data is not shared with third parties."
-        },
-        {
-          title: "Data Security",
-          content: "Industry-standard security measures are implemented to protect user data."
-        },
-        {
-          title: "Cookies",
-          content: "Cookies are used to improve the platform experience. You can manage your cookie preferences from your browser settings."
-        }
+      dataCollection: "Data Collection",
+      dataCollectionDesc: [
+        "We value our users' privacy.",
+        "We collect only the minimum required information.",
+        "Collected data is stored securely."
       ],
-      backToHome: "Back to Home",
+      dataUsage: "Data Usage",
+      dataUsageDesc: [
+        "Your data is used only to improve service quality.",
+        "Not shared with third parties.",
+        "May be used anonymously for statistical analysis."
+      ],
+      security: "Security",
+      securityDesc: [
+        "Latest security protocols are used.",
+        "Regular security checks are performed.",
+        "Your data is stored encrypted."
+      ],
+      cookies: "Cookies",
+      cookiesDesc: [
+        "Cookies are used for a better experience.",
+        "Cookies can be disabled from your browser.",
+        "Your consent is obtained for non-essential cookies."
+      ],
       alphaAccess: "Join Alpha Version",
       days: "Days",
       hours: "Hours",
       minutes: "Minutes",
-      seconds: "Seconds"
+      seconds: "Seconds",
+      lightMode: "Light Mode",
+      darkMode: "Dark Mode"
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <main className={`min-h-screen ${theme === 'light' ? 'light-theme' : ''}`}>
       <CustomCursor />
-      
-      {/* Navbar */}
-      <header className="fixed top-[88px] left-0 right-0 z-40 bg-black/80 backdrop-blur-sm border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center gap-4">
-              <div className="relative w-[70px] h-[70px]">
-                <Image
-                  src="/images/logo.png"
-                  alt="AI News Tracker Logo"
-                  fill
-                  className="object-contain filter invert brightness-0 invert"
-                  sizes="70px"
-                  priority
-                />
-              </div>
-              <TypewriterText />
-            </Link>
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setLang('tr')}
-                className={`px-3 py-1 rounded-md transition-all ${lang === 'tr' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}
-              >
-                TR
-              </button>
-              <button 
-                onClick={() => setLang('en')}
-                className={`px-3 py-1 rounded-md transition-all ${lang === 'en' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}
-              >
-                EN
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Countdown Section - En üstte ve sabit */}
+      {/* Countdown Section */}
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-900 to-purple-900 border-b border-gray-800"
+        className="fixed top-0 left-0 right-0 z-50 countdown-section border-b border-gray-800"
       >
         <div className="container mx-auto px-4 py-2">
           <div className="text-center">
@@ -207,46 +193,112 @@ export default function Privacy() {
         </div>
       </motion.div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="container mx-auto px-4 py-16 space-y-8 pt-[220px]"
-      >
-        <motion.h1 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent"
-        >
-          {content[lang].title}
-        </motion.h1>
-
-        {content[lang].sections.map((section, index) => (
-          <motion.section 
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="privacy-card bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-6 rounded-xl backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-all duration-300"
-          >
-            <h2 className="text-2xl font-semibold mb-4 text-blue-400">{section.title}</h2>
-            <p className="text-gray-300">{section.content}</p>
-          </motion.section>
-        ))}
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center pt-8"
-        >
-          <Link 
-            href="/"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105"
-          >
-            {content[lang].backToHome}
+      {/* Header */}
+      <header className="fixed top-[88px] left-0 right-0 z-40 border-b border-gray-800">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-4">
+            <Image
+              src="/images/logo.png"
+              alt="AI News Tracker Logo"
+              width={70}
+              height={70}
+              className="rounded-lg navbar-logo"
+            />
+            <div className="hidden md:block">
+              <TypewriterText />
+            </div>
           </Link>
-        </motion.div>
-      </motion.div>
-    </div>
+          <div className="flex gap-4">
+            {/* Theme Switch */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="theme-switch"
+              data-theme={theme}
+              aria-label={content[lang][theme === 'dark' ? 'lightMode' : 'darkMode']}
+            >
+              <div className="theme-icons">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              </div>
+              <div className="switch-handle">
+                {theme === 'dark' ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
+                    <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
+                    <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                  </svg>
+                )}
+              </div>
+            </button>
+            {/* Language Buttons */}
+            <button
+              onClick={() => setLang('tr')}
+              className={`px-4 py-2 rounded-full ${lang === 'tr' ? 'active' : ''}`}
+            >
+              TR
+            </button>
+            <button
+              onClick={() => setLang('en')}
+              className={`px-4 py-2 rounded-full ${lang === 'en' ? 'active' : ''}`}
+            >
+              EN
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="pt-[176px]">
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="py-20"
+        >
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl font-bold mb-12 text-center">{content[lang].title}</h1>
+            
+            {/* Data Collection */}
+            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
+              <h2 className="text-2xl font-semibold mb-4">{content[lang].dataCollection}</h2>
+              {content[lang].dataCollectionDesc.map((desc, index) => (
+                <p key={index} className="mb-2">{desc}</p>
+              ))}
+            </motion.div>
+
+            {/* Data Usage */}
+            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
+              <h2 className="text-2xl font-semibold mb-4">{content[lang].dataUsage}</h2>
+              {content[lang].dataUsageDesc.map((desc, index) => (
+                <p key={index} className="mb-2">{desc}</p>
+              ))}
+            </motion.div>
+
+            {/* Security */}
+            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
+              <h2 className="text-2xl font-semibold mb-4">{content[lang].security}</h2>
+              {content[lang].securityDesc.map((desc, index) => (
+                <p key={index} className="mb-2">{desc}</p>
+              ))}
+            </motion.div>
+
+            {/* Cookies */}
+            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
+              <h2 className="text-2xl font-semibold mb-4">{content[lang].cookies}</h2>
+              {content[lang].cookiesDesc.map((desc, index) => (
+                <p key={index} className="mb-2">{desc}</p>
+              ))}
+            </motion.div>
+          </div>
+        </motion.section>
+      </div>
+    </main>
   );
 } 

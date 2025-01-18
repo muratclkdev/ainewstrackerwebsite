@@ -6,7 +6,14 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import emailjs from '@emailjs/browser';
 
+declare global {
+  interface Window {
+    adsbygoogle: any[];
+  }
+}
+
 type Lang = 'tr' | 'en';
+type Theme = 'light' | 'dark';
 
 type ContentType = {
   [key in Lang]: {
@@ -55,6 +62,8 @@ type ContentType = {
     feedbackMessage: string;
     feedbackSubmit: string;
     feedbackSuccess: string;
+    lightMode: string;
+    darkMode: string;
   }
 };
 
@@ -195,6 +204,7 @@ const CustomCursor = () => {
 
 export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
+  const [theme, setTheme] = useState<Theme>('dark');
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -228,6 +238,20 @@ export default function Home() {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    // Google Ads'i initialize et
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error('Google Ads Error:', err);
+    }
+  }, []);
+
+  // Tema değişimini yönet
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-theme', theme === 'light');
+  }, [theme]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -300,7 +324,9 @@ export default function Home() {
       feedbackEmail: "E-posta Adresiniz",
       feedbackMessage: "Mesajınız",
       feedbackSubmit: "Gönder",
-      feedbackSuccess: "Geribildiriminiz için teşekkürler!"
+      feedbackSuccess: "Geribildiriminiz için teşekkürler!",
+      lightMode: "Gündüz Modu",
+      darkMode: "Gece Modu",
     },
     en: {
       title: "AI News Tracker",
@@ -351,7 +377,9 @@ export default function Home() {
       feedbackEmail: "Your Email",
       feedbackMessage: "Your Message",
       feedbackSubmit: "Submit",
-      feedbackSuccess: "Thank you for your feedback!"
+      feedbackSuccess: "Thank you for your feedback!",
+      lightMode: "Light Mode",
+      darkMode: "Dark Mode",
     }
   };
 
@@ -399,15 +427,15 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className={`min-h-screen ${theme === 'light' ? 'light-theme' : ''}`}>
       <CustomCursor />
-      {/* Countdown Section - En üstte ve sabit */}
+      {/* Countdown Section */}
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-900 to-purple-900 border-b border-gray-800"
+        className="fixed top-0 left-0 right-0 z-50 countdown-section border-b border-gray-800"
       >
         <div className="container mx-auto px-4 py-2">
           <div className="text-center">
@@ -439,8 +467,8 @@ export default function Home() {
         </div>
       </motion.div>
 
-      {/* Header - Countdown'dan sonra */}
-      <header className="fixed top-[88px] left-0 right-0 z-40 bg-black/80 backdrop-blur-sm border-b border-gray-800">
+      {/* Header */}
+      <header className="fixed top-[88px] left-0 right-0 z-40 border-b border-gray-800">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Image
@@ -448,20 +476,50 @@ export default function Home() {
               alt="AI News Tracker Logo" 
               width={70}
               height={70}
-              className="rounded-lg filter invert brightness-0 invert"
+              className="rounded-lg navbar-logo"
             />
-            <TypewriterText />
+            <div className="hidden md:block">
+              <TypewriterText />
+            </div>
           </div>
           <div className="flex gap-4">
-            <button 
+            {/* Theme Switch */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="theme-switch"
+              data-theme={theme}
+              aria-label={content[lang][theme === 'dark' ? 'lightMode' : 'darkMode']}
+            >
+              <div className="theme-icons">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              </div>
+              <div className="switch-handle">
+                {theme === 'dark' ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
+                    <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
+                    <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                  </svg>
+                )}
+              </div>
+            </button>
+            {/* Language Buttons */}
+            <button
               onClick={() => setLang('tr')}
-              className={`px-3 py-1 rounded-md transition-all ${lang === 'tr' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-full ${lang === 'tr' ? 'active' : ''}`}
             >
               TR
             </button>
-            <button 
+            <button
               onClick={() => setLang('en')}
-              className={`px-3 py-1 rounded-md transition-all ${lang === 'en' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-full ${lang === 'en' ? 'active' : ''}`}
             >
               EN
             </button>
@@ -469,8 +527,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content - Header'dan sonra başlayacak şekilde padding ayarı */}
-      <div className="pt-[176px]"> {/* Countdown (88px) + Header (88px) yüksekliği */}
+      {/* Main Content */}
+      <div className="pt-[176px]">
         {/* Hero Section */}
         <motion.section
           initial="hidden"
@@ -479,43 +537,52 @@ export default function Home() {
           variants={fadeInUp}
           className="bg-gradient-to-b from-gray-900 via-gray-800 to-black py-24 relative overflow-hidden"
         >
-          {/* Arka plan logosu */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -right-40 top-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-5 transform -rotate-45">
-          <Image
-                src="/images/logo.png" 
-                alt="Background Logo" 
-                fill
-                className="object-contain animate-float"
-              />
-            </div>
-          </div>
-
           <div className="container mx-auto px-4 relative">
-            <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-                {content[lang].title}
-              </h1>
-              <p className="text-xl mb-10 text-gray-300">
-                {content[lang].description}
-              </p>
-              <Link
-                href="https://t.me/ainewstracker"
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+              <div className="text-center lg:text-left max-w-xl">
+                <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+                  {content[lang].title}
+                </h1>
+                <p className="text-xl mb-10 text-gray-300">
+                  {content[lang].description}
+                </p>
+                <Link
+                  href="https://t.me/ainewstracker"
           target="_blank"
-                className="telegram-button"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="telegram-icon w-5 h-5"
+                  className="telegram-button"
                 >
-                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                </svg>
-                <span className="font-medium">{content[lang].telegram}</span>
-              </Link>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="telegram-icon w-5 h-5"
+                  >
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  </svg>
+                  <span className="font-medium">{content[lang].telegram}</span>
+                </Link>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative w-[300px] h-[600px] mockup-container"
+              >
+                <div className="absolute inset-0 iphone-mockup">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src="/images/screenshot.jpg"
+                      alt="AI News Tracker App Screenshot"
+                      fill
+                      className="object-cover rounded-[40px]"
+                      priority
+                    />
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
         </motion.section>
@@ -576,6 +643,18 @@ export default function Home() {
           </div>
         </motion.section>
 
+        {/* İlk Reklam Alanı */}
+        <div className="py-8 text-center">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="YOUR-CLIENT-ID"
+            data-ad-slot="YOUR-AD-SLOT-1"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
+
         {/* Team Section */}
         <motion.section
           initial="hidden"
@@ -615,7 +694,7 @@ export default function Home() {
                     className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.365 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                     {content[lang].github}
                   </Link>
@@ -626,7 +705,7 @@ export default function Home() {
                     className="flex items-center justify-center gap-2 bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.365 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                      <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.501-.297-.302-.393-.77-.177-1.146.154-.267.415-.456.692-.58.36-.162.737-.284 1.123-.366 1.075-.238 2.189-.331 3.287-.37 1.218-.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
                     </svg>
                     {content[lang].buyMeACoffee}
                   </Link>
@@ -648,7 +727,7 @@ export default function Home() {
                     className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#F0B90B] to-[#F8D12F] hover:from-[#F0B90B]/90 hover:to-[#F8D12F]/90 text-black font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7.64 13.406l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.323 2.324-2.324-2.324-2.324L7.64 8.76 5.316 6.435 3 8.76l2.316 2.323L3 13.406l2.316 2.324 2.324-2.324zm8.747 0l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324-2.324zM7.64 19.085l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.324 2.324-2.323-2.324-2.324-2.323 2.324-2.324-2.324-2.316 2.323 2.316 2.324-2.316 2.324 2.316 2.324 2.324-2.324z"/>
+                      <path d="M7.64 13.406l2.324-2.324 2.323 2.324 2.324-2.324-2.324-2.323 2.324-2.324-2.324-2.324L7.64 8.76 5.316 6.435 3 8.76l2.316 2.323L3 13.406l2.316 2.324 2.324-2.324zm8.747 0l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324-2.324zM7.64 19.085l2.324-2.324 2.324 2.324L23.359 8.76l-2.324-2.324-2.324 2.324-2.324-2.324-2.324 2.324 2.324 2.323-2.324 2.324 2.324 2.324 2.324-2.324z"/>
                     </svg>
                     {content[lang].binancePay}
                   </Link>
@@ -772,7 +851,7 @@ export default function Home() {
                           src={source.logo}
                           alt={source.name}
                           fill
-                          className="object-contain filter group-hover:brightness-110 transition-all duration-300 p-2 invert brightness-0 invert"
+                          className="object-contain news-source-logo group-hover:brightness-110 transition-all duration-300 p-2"
                           sizes="(max-width: 768px) 96px, 96px"
                           priority={source.name === 'Crypto.news'}
                           quality={100}
@@ -788,6 +867,18 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
+
+        {/* İkinci Reklam Alanı */}
+        <div className="py-8 text-center">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="YOUR-CLIENT-ID"
+            data-ad-slot="YOUR-AD-SLOT-2"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
 
         {/* ChatGPT Section */}
         <motion.section
@@ -911,6 +1002,18 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
+
+        {/* Üçüncü Reklam Alanı */}
+        <div className="py-8 text-center">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="YOUR-CLIENT-ID"
+            data-ad-slot="YOUR-AD-SLOT-3"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
 
         {/* Footer */}
         <footer className="bg-gray-900 py-12 border-t border-gray-800">
