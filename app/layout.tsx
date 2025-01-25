@@ -2,12 +2,13 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "AI News Tracker",
-  description: "Kripto para haberleri yapay zeka destekli takip sistemi",
+  description: "AI News Tracker - Yapay Zeka Haberleri",
 };
 
 export default function RootLayout({
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script
           async
@@ -51,7 +52,11 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} transition-colors duration-300`}>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

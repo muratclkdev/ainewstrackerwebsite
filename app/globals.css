@@ -192,7 +192,7 @@ body {
 }
 
 .light-theme .news-sources-grid a {
-  background: #ffffff;
+  background-color: #ffffff;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
 }
@@ -1133,4 +1133,14 @@ header button.active {
   background-color: #3b82f6;
   color: #ffffff;
   border-color: #3b82f6;
+}
+
+/* Haber Kaynakları kartları için özel stil */
+.news-source-card {
+  @apply flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300;
+  background-color: #FFFFFF;
+}
+
+.dark .news-source-card {
+  background-color: #18181B;
 }
