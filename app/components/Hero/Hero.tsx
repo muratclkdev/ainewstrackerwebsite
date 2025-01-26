@@ -143,15 +143,15 @@ export const Hero: React.FC<HeroProps> = ({ lang }) => {
                 }}
                 className="relative w-full max-w-[700px] z-10"
               >
-                <div className={`p-4 rounded-2xl shadow-lg transform hover:-translate-y-2 transition-transform duration-500 ${
-                  isDark ? 'bg-gray-800' : 'bg-white'
+                <div className={`p-1 rounded-xl shadow-md transform hover:-translate-y-2 transition-transform duration-500 ${
+                  isDark ? 'bg-gray-800/90' : 'bg-white/90'
                 }`}>
                   <Image
                     src="/images/ss_pc.png"
                     alt="AI News Tracker Desktop"
                     width={700}
                     height={438}
-                    className="rounded-xl"
+                    className="rounded-lg"
                   />
                 </div>
               </motion.div>
@@ -176,15 +176,15 @@ export const Hero: React.FC<HeroProps> = ({ lang }) => {
                 }}
                 className="relative w-[250px] -mt-20 md:-mt-32 z-20"
               >
-                <div className={`rounded-[2.5rem] p-4 shadow-lg transform hover:-translate-y-2 transition-transform duration-500 ${
-                  isDark ? 'bg-gray-800' : 'bg-white'
+                <div className={`rounded-[2rem] p-1 shadow-md transform hover:-translate-y-2 transition-transform duration-500 ${
+                  isDark ? 'bg-gray-800/90' : 'bg-white/90'
                 }`}>
                   <Image
                     src="/images/screenshot.jpg"
                     alt="AI News Tracker Mobile"
                     width={250}
                     height={500}
-                    className="rounded-[2rem]"
+                    className="rounded-[1.75rem]"
                   />
                 </div>
               </motion.div>
