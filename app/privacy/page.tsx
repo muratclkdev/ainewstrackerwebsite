@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CustomCursor } from '../components/CustomCursor';
 import { TypewriterText } from '../components/TypewriterText';
+import { YandexMetrica } from '../components/analytics/YandexMetrica';
+import { CookieConsent } from '../components/analytics/CookieConsent';
 
 type Lang = 'tr' | 'en';
 type Theme = 'light' | 'dark';
@@ -154,6 +156,7 @@ export default function Privacy() {
 
   return (
     <main className={`min-h-screen ${theme === 'light' ? 'light-theme' : ''}`}>
+      <YandexMetrica />
       <CustomCursor />
       {/* Countdown Section */}
       <motion.div
@@ -299,6 +302,7 @@ export default function Privacy() {
           </div>
         </motion.section>
       </div>
+      <CookieConsent lang={lang} />
     </main>
   );
 } 

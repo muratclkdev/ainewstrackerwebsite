@@ -15,6 +15,8 @@ import { FeedbackSection } from './components/FeedbackSection/FeedbackSection';
 import { Footer } from './components/Footer/Footer';
 import Image from 'next/image';
 import { Team } from './components/Team/Team';
+import { YandexMetrica } from './components/analytics/YandexMetrica';
+import { CookieConsent } from './components/analytics/CookieConsent';
 
 declare global {
   interface Window {
@@ -60,6 +62,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <YandexMetrica />
       <CustomCursor />
       <CountdownTimer lang={lang} />
       <Header
@@ -77,6 +80,7 @@ export default function Home() {
         <FeedbackSection lang={lang} />
       </main>
       <Footer lang={lang} />
+      <CookieConsent lang={lang} />
     </div>
   );
 }
