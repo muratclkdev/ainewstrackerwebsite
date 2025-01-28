@@ -8,7 +8,7 @@ import { Lang } from '../../types';
 
 interface HeroProps {
   lang: Lang;
-  handleTelegramClick: () => void;
+  handleTelegramClick: () => Promise<void>;
   telegramInviteLink?: string;
   content: {
     [key in Lang]: {
@@ -23,8 +23,9 @@ interface HeroProps {
 export const Hero = ({ lang, handleTelegramClick, telegramInviteLink, content }: HeroProps) => {
   const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
 
-  const handleTelegramClickWrapper = () => {
+  const handleTelegramClickWrapper = async () => {
     setShowFeedbackMessage(true);
+    await handleTelegramClick();
     setTimeout(() => setShowFeedbackMessage(false), 3000);
   };
 
