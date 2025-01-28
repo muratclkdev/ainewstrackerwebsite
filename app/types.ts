@@ -7,6 +7,9 @@ export interface ContentType {
     description: string;
     telegram: string;
     feedbackSuccess: string;
+    feedback: string;
+    feedbackDesc: string;
+    understood: string;
   }
 }
 
@@ -63,15 +66,12 @@ interface ContentValues {
   hours: string;
   minutes: string;
   seconds: string;
-  feedback: string;
-  feedbackDesc: string;
   feedbackName: string;
   feedbackEmail: string;
   feedbackMessage: string;
   feedbackSubmit: string;
   lightMode: string;
   darkMode: string;
-  understood: string;
   binanceDonate: string;
   metamaskDonate: string;
   founder: string;

@@ -104,7 +104,7 @@ export const content: ContentType = {
     minutes: "Minutes",
     seconds: "Seconds",
     feedback: "Feedback",
-    feedbackDesc: "After joining the channel, it's very important to share your thoughts and feelings with us",
+    feedbackDesc: "After joining the channel, it's important to share your thoughts and feelings with us",
     feedbackName: "Name",
     feedbackEmail: "Email",
     feedbackMessage: "Message",

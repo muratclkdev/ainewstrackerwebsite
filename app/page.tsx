@@ -55,33 +55,10 @@ const scaleIn = {
 export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
   const [theme, setTheme] = useState<Theme>('dark');
-  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
-  const [telegramInviteLink, setTelegramInviteLink] = useState<string>('');
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-theme', theme === 'light');
   }, [theme]);
-
-  const handleTelegramClick = async (): Promise<void> => {
-    try {
-      const response: Response = await fetch('/api/telegram-invite');
-      const data: TelegramResponse = await response.json();
-      
-      if (data.success) {
-        const telegramUrl = data.inviteLink || 'https://t.me/ainewstracker';
-        setTelegramInviteLink(telegramUrl);
-        
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          window.location.href = telegramUrl;
-        } else {
-          window.open(telegramUrl, '_blank');
-        }
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setTelegramInviteLink('https://t.me/ainewstracker');
-    }
-  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -97,8 +74,6 @@ export default function Home() {
       <main className="pt-[176px]">
         <Hero 
           lang={lang} 
-          handleTelegramClick={handleTelegramClick} 
-          telegramInviteLink={telegramInviteLink}
           content={content} 
         />
         <Features lang={lang} />
