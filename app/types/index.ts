@@ -58,7 +58,7 @@ export type ContentType = {
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: Record<string, any>[];
     ethereum: {
       request: (args: { method: string; params?: any[] }) => Promise<any>;
       selectedAddress: string;
