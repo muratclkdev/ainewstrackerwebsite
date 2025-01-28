@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { content } from './content';
-import type { Lang, Theme } from './types';
+import type { Lang, Theme, TelegramResponse } from './types';
 import { CustomCursor } from './components/CustomCursor';
 import { CountdownTimer } from './components/CountdownTimer/CountdownTimer';
 import { Header } from './components/Header/Header';
-import { Hero } from './components/Hero/Hero';
+import Hero from './components/home/Hero';
 import { Features } from './components/Features/Features';
 import { NewsSection } from './components/NewsSection/NewsSection';
 import { AboutSection } from './components/AboutSection/AboutSection';
@@ -20,7 +20,7 @@ import { CookieConsent } from './components/analytics/CookieConsent';
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: Record<string, any>[];
     ethereum: {
       request: (args: { method: string; params?: any[] }) => Promise<any>;
       selectedAddress: string;
@@ -62,16 +62,15 @@ export default function Home() {
     document.documentElement.classList.toggle('light-theme', theme === 'light');
   }, [theme]);
 
-  const handleTelegramClick = async () => {
+  const handleTelegramClick = async (): Promise<void> => {
     try {
-      const response = await fetch('/api/telegram-invite');
-      const data = await response.json();
+      const response: Response = await fetch('/api/telegram-invite');
+      const data: TelegramResponse = await response.json();
       
       if (data.success) {
         const telegramUrl = data.inviteLink || 'https://t.me/ainewstracker';
         setTelegramInviteLink(telegramUrl);
         
-        // iOS için Universal Link desteği
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           window.location.href = telegramUrl;
         } else {
@@ -80,7 +79,6 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error:', error);
-      // Hata durumunda varsayılan kanal linkini göster
       setTelegramInviteLink('https://t.me/ainewstracker');
     }
   };

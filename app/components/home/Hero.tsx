@@ -5,22 +5,16 @@ import { fadeInUp } from '../../constants';
 import Image from "next/image";
 import { useState } from "react";
 import { Lang } from '../../types';
+import { ContentType } from '../../types';
 
 interface HeroProps {
   lang: Lang;
   handleTelegramClick: () => Promise<void>;
   telegramInviteLink?: string;
-  content: {
-    [key in Lang]: {
-      title: string;
-      description: string;
-      telegram: string;
-      feedbackSuccess: string;
-    }
-  };
+  content: ContentType;
 }
 
-export const Hero = ({ lang, handleTelegramClick, telegramInviteLink, content }: HeroProps) => {
+const Hero: React.FC<HeroProps> = ({ lang, handleTelegramClick, telegramInviteLink, content }) => {
   const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
 
   const handleTelegramClickWrapper = async () => {
@@ -127,4 +121,4 @@ export const Hero = ({ lang, handleTelegramClick, telegramInviteLink, content }:
   );
 };
 
-export default Hero; 
+export default Hero;

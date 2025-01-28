@@ -1,9 +1,28 @@
 export type Lang = 'tr' | 'en';
-export type Theme = 'dark' | 'light';
+export type Theme = 'light' | 'dark';
 
 export interface ContentType {
-  tr: ContentValues;
-  en: ContentValues;
+  [key: string]: {
+    title: string;
+    description: string;
+    telegram: string;
+    feedbackSuccess: string;
+  }
+}
+
+export interface TelegramResponse {
+  success: boolean;
+  inviteLink?: string;
+}
+
+declare global {
+  interface Window {
+    adsbygoogle: Record<string, any>[];
+    ethereum: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      selectedAddress: string;
+    };
+  }
 }
 
 interface ContentValues {
@@ -38,7 +57,6 @@ interface ContentValues {
   listingDesc: string;
   summaryTitle: string;
   summaryDesc: string;
-  telegram: string;
   binancePay: string;
   alphaAccess: string;
   days: string;
@@ -51,7 +69,6 @@ interface ContentValues {
   feedbackEmail: string;
   feedbackMessage: string;
   feedbackSubmit: string;
-  feedbackSuccess: string;
   lightMode: string;
   darkMode: string;
   understood: string;
