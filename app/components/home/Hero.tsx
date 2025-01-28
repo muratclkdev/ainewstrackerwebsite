@@ -44,7 +44,7 @@ export const Hero = ({ lang, handleTelegramClick, content }: HeroProps) => {
             <motion.button
               variants={fadeInUp}
               onClick={handleTelegramClick}
-              className="telegram-button"
+              className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto"
             >
               {content[lang].telegram}
             </motion.button>

@@ -55,10 +55,29 @@ const scaleIn = {
 export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
   const [theme, setTheme] = useState<Theme>('dark');
+  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-theme', theme === 'light');
   }, [theme]);
+
+  const handleTelegramClick = async () => {
+    try {
+      const telegramUrl = 'https://t.me/ainewstracker';
+      
+      // iOS için Universal Link desteği
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = telegramUrl;
+      } else {
+        window.open(telegramUrl, '_blank');
+      }
+      
+      setShowFeedbackMessage(true);
+      setTimeout(() => setShowFeedbackMessage(false), 3000);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
