@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Lang } from '../../types';
 
 interface CookieConsentProps {
@@ -10,16 +10,39 @@ interface CookieConsentProps {
 
 export const CookieConsent = ({ lang }: CookieConsentProps) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [showTelegramLink, setShowTelegramLink] = useState(false);
+  const [telegramInviteLink, setTelegramInviteLink] = useState('');
 
   useEffect(() => {
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
       setIsVisible(true);
+      setShowTelegramLink(true);
     }
   }, []);
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     localStorage.setItem('cookieConsent', 'true');
+    try {
+      const response = await fetch('/api/telegram-invite');
+      const data = await response.json();
+      if (data.success) {
+        setTelegramInviteLink(data.inviteLink || 'https://t.me/ainewstracker');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setTelegramInviteLink('https://t.me/ainewstracker');
+    }
+    setIsVisible(false);
+  };
+
+  const handleTelegramClick = () => {
+    const url = telegramInviteLink || 'https://t.me/ainewstracker';
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = url;
+    } else {
+      window.open(url, "_blank");
+    }
     setIsVisible(false);
   };
 
@@ -27,37 +50,65 @@ export const CookieConsent = ({ lang }: CookieConsentProps) => {
 
   const content = {
     tr: {
-      title: "🍪 Çerez ve İzleme Bildirimi",
-      description: "Bu web sitesi, deneyiminizi geliştirmek ve site trafiğini analiz etmek için Yandex Metrica kullanmaktadır. Siteyi kullanmaya devam ederek çerezlerin kullanımını kabul etmiş olursunuz.",
-      accept: "Anladım"
+      title: "Çerez Bildirimi",
+      description: "Bu web sitesi, size daha iyi bir deneyim sunmak için çerezleri ve Yandex Metrica analiz araçlarını kullanmaktadır.",
+      accept: "Anladım",
+      telegramText: "Telegram kanalımıza katılmak için tıklayın",
+      joinChannel: "Kanala Katıl",
+      fallbackText: "Eğer kanala katılamadıysanız buraya tıklayın"
     },
     en: {
-      title: "🍪 Cookie and Tracking Notice",
-      description: "This website uses Yandex Metrica to enhance your experience and analyze site traffic. By continuing to use the site, you agree to the use of cookies.",
-      accept: "I understand"
+      title: "Cookie Notice",
+      description: "This website uses cookies and Yandex Metrica analytics tools to provide you with a better experience.",
+      accept: "I understand",
+      telegramText: "Click to join our Telegram channel",
+      joinChannel: "Join Channel",
+      fallbackText: "If you couldn't join the channel, click here"
     }
   };
 
   return (
-    <motion.div
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 100, opacity: 0 }}
-      className="fixed bottom-4 left-4 right-4 md:left-8 md:right-auto md:max-w-md bg-gray-900 p-6 rounded-xl shadow-xl border border-gray-800 z-50"
-    >
-      <h3 className="text-lg font-semibold mb-2 text-white">
-        {content[lang].title}
-      </h3>
-      <p className="text-gray-300 mb-4 text-sm">
-        {content[lang].description}
-      </p>
-      <button
-        onClick={handleAccept}
-        className="w-full md:w-auto px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200"
-      >
-        {content[lang].accept}
-      </button>
-    </motion.div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed bottom-0 left-0 right-0 bg-gray-900 shadow-lg z-50 p-4 md:p-6 border-t border-gray-800"
+        >
+          <div className="max-w-screen-xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-white">
+                  {content[lang].title}
+                </h2>
+                <p className="mt-1 text-sm text-gray-400">
+                  {content[lang].description}
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={handleAccept}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                >
+                  {content[lang].accept}
+                </button>
+                {showTelegramLink && (
+                  <div className="flex flex-col items-center gap-2">
+                    <button
+                      onClick={handleTelegramClick}
+                      className="text-sm text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                    >
+                      {content[lang].fallbackText}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

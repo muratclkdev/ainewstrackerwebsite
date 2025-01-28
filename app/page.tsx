@@ -56,6 +56,7 @@ export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
   const [theme, setTheme] = useState<Theme>('dark');
   const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
+  const [telegramInviteLink, setTelegramInviteLink] = useState<string>('');
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-theme', theme === 'light');
@@ -63,19 +64,24 @@ export default function Home() {
 
   const handleTelegramClick = async () => {
     try {
-      const telegramUrl = 'https://t.me/ainewstracker';
+      const response = await fetch('/api/telegram-invite');
+      const data = await response.json();
       
-      // iOS için Universal Link desteği
-      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        window.location.href = telegramUrl;
-      } else {
-        window.open(telegramUrl, '_blank');
+      if (data.success) {
+        const telegramUrl = data.inviteLink || 'https://t.me/ainewstracker';
+        setTelegramInviteLink(telegramUrl);
+        
+        // iOS için Universal Link desteği
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          window.location.href = telegramUrl;
+        } else {
+          window.open(telegramUrl, '_blank');
+        }
       }
-      
-      setShowFeedbackMessage(true);
-      setTimeout(() => setShowFeedbackMessage(false), 3000);
     } catch (error) {
       console.error('Error:', error);
+      // Hata durumunda varsayılan kanal linkini göster
+      setTelegramInviteLink('https://t.me/ainewstracker');
     }
   };
 
@@ -91,7 +97,12 @@ export default function Home() {
         onLanguageChange={setLang}
       />
       <main className="pt-[176px]">
-        <Hero lang={lang} />
+        <Hero 
+          lang={lang} 
+          handleTelegramClick={handleTelegramClick} 
+          telegramInviteLink={telegramInviteLink}
+          content={content} 
+        />
         <Features lang={lang} />
         <Team lang={lang} />
         <NewsSection lang={lang} />
