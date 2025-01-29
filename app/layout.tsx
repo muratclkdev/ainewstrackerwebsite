@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Providers } from "./providers";
+import AdSenseScript from "./components/AdSenseScript";
+import AdBlockDetector from "./components/AdBlockDetector";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2763920619272344"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <AdSenseScript />
         <Script
           async
           src="https://fundingchoicesmessages.google.com/i/pub-2763920619272344?ers=1"
@@ -52,9 +49,10 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${inter.className} transition-colors duration-300`}>
+      <body className={`${inter.className} transition-colors duration-300`} suppressHydrationWarning>
         <Providers>
           {children}
+          <AdBlockDetector lang="tr" />
         </Providers>
       </body>
     </html>

@@ -75,7 +75,7 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
                   {content[lang].github}
                 </motion.a>
                 <motion.a
-                  href="https://www.buymeacoffee.com/muratcelik"
+                  href="https://buymeacoffee.com/muratclkdev"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300"

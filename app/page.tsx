@@ -8,10 +8,11 @@ import { CustomCursor } from './components/CustomCursor';
 import { CountdownTimer } from './components/CountdownTimer/CountdownTimer';
 import { Header } from './components/Header/Header';
 import Hero from './components/home/Hero';
-import { Features } from './components/Features/Features';
+import { Features } from './components/home/Features';
+import { AllInOne } from './components/home/AllInOne';
 import { NewsSection } from './components/NewsSection/NewsSection';
 import { AboutSection } from './components/AboutSection/AboutSection';
-import { FeedbackSection } from './components/FeedbackSection/FeedbackSection';
+import { Feedback } from './components/home/Feedback';
 import { Footer } from './components/Footer/Footer';
 import Image from 'next/image';
 import { Team } from './components/Team/Team';
@@ -55,13 +56,14 @@ const scaleIn = {
 export default function Home() {
   const [lang, setLang] = useState<Lang>('tr');
   const [theme, setTheme] = useState<Theme>('dark');
+  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-theme', theme === 'light');
   }, [theme]);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white" suppressHydrationWarning>
       <YandexMetrica />
       <CustomCursor />
       <CountdownTimer lang={lang} />
@@ -76,11 +78,37 @@ export default function Home() {
           lang={lang} 
           content={content} 
         />
-        <Features lang={lang} />
+        <AllInOne lang={lang} content={content} />
+        <Features lang={lang} content={content} />
         <Team lang={lang} />
         <NewsSection lang={lang} />
         <AboutSection lang={lang} />
-        <FeedbackSection lang={lang} />
+        <Feedback 
+          lang={lang} 
+          content={{
+            tr: {
+              feedbackTitle: content.tr.feedback,
+              feedbackSuccess: content.tr.feedbackSuccess,
+              feedback: content.tr.feedback,
+              feedbackDesc: content.tr.feedbackDesc,
+              feedbackName: content.tr.feedbackName,
+              feedbackEmail: content.tr.feedbackEmail,
+              feedbackMessage: content.tr.feedbackMessage,
+              feedbackSubmit: content.tr.feedbackSubmit,
+            },
+            en: {
+              feedbackTitle: content.en.feedback,
+              feedbackSuccess: content.en.feedbackSuccess,
+              feedback: content.en.feedback,
+              feedbackDesc: content.en.feedbackDesc,
+              feedbackName: content.en.feedbackName,
+              feedbackEmail: content.en.feedbackEmail,
+              feedbackMessage: content.en.feedbackMessage,
+              feedbackSubmit: content.en.feedbackSubmit,
+            }
+          }}
+          showFeedbackMessage={showFeedbackMessage}
+        />
       </main>
       <Footer lang={lang} />
       <CookieConsent lang={lang} />

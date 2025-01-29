@@ -51,12 +51,12 @@ export const content: ContentType = {
     feedbackEmail: "E-posta",
     feedbackMessage: "Mesaj",
     feedbackSubmit: "Gönder",
-    feedbackSuccess: "Geri bildiriminiz için teşekkür ederiz!",
     lightMode: "Aydınlık Mod",
     darkMode: "Karanlık Mod",
     understood: "Anladım",
     binanceDonate: "Binance ile Bağış Yap",
-    metamaskDonate: "MetaMask ile Bağış Yap"
+    metamaskDonate: "MetaMask ile Bağış Yap",
+    feedbackSuccess: "Geri bildiriminiz için teşekkürler!"
   },
   en: {
     title: "AI News Tracker",

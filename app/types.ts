@@ -12,6 +12,8 @@ export interface ContentType {
     understood: string;
     github: string;
     features: string;
+    allInOne: string;
+    allInOneDesc: string;
     gptTitle: string;
     gptDesc: string;
     realTimeTitle: string;
