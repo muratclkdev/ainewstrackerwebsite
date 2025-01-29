@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+// Rate limiting için basit bir in-memory store
+const rateLimit = new Map<string, number[]>();
+
+// Rate limit ayarları
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 dakika
+const MAX_REQUESTS = 5; // 1 dakikada maksimum 5 istek
 
 export async function POST() {
   // Token ve Chat ID kontrolü
@@ -17,6 +25,27 @@ export async function POST() {
   }
 
   try {
+    // IP adresi al
+    const headersList = await headers();
+    const forwardedFor = headersList.get('x-forwarded-for');
+    const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
+    
+    // Rate limiting kontrolü
+    const now = Date.now();
+    const userRequests = rateLimit.get(ip) || [];
+    const recentRequests = userRequests.filter((time: number) => now - time < RATE_LIMIT_WINDOW);
+    
+    if (recentRequests.length >= MAX_REQUESTS) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429 }
+      );
+    }
+    
+    // Yeni isteği kaydet
+    recentRequests.push(now);
+    rateLimit.set(ip, recentRequests);
+
     console.log('Generating Telegram invite link...');
     
     const response = await fetch(
