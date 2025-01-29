@@ -21,30 +21,8 @@ export const CookieConsent = ({ lang }: CookieConsentProps) => {
     }
   }, []);
 
-  const handleAccept = async () => {
-    localStorage.setItem('cookieConsent', 'true');
-    try {
-      const response = await fetch('/api/telegram-invite');
-      const data = await response.json();
-      if (data.success) {
-        setTelegramInviteLink(data.inviteLink || 'https://t.me/ainewstracker');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setTelegramInviteLink('https://t.me/ainewstracker');
-    }
-    setIsVisible(false);
-  };
 
-  const handleTelegramClick = () => {
-    const url = telegramInviteLink || 'https://t.me/ainewstracker';
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      window.location.href = url;
-    } else {
-      window.open(url, "_blank");
-    }
-    setIsVisible(false);
-  };
+
 
   if (!isVisible) return null;
 
@@ -85,24 +63,6 @@ export const CookieConsent = ({ lang }: CookieConsentProps) => {
                 <p className="mt-1 text-sm text-gray-400">
                   {content[lang].description}
                 </p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={handleAccept}
-                  className="bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
-                >
-                  {content[lang].accept}
-                </button>
-                {showTelegramLink && (
-                  <div className="flex flex-col items-center gap-2">
-                    <button
-                      onClick={handleTelegramClick}
-                      className="text-sm text-blue-400 hover:text-blue-300 underline cursor-pointer"
-                    >
-                      {content[lang].fallbackText}
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
