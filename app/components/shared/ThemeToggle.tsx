@@ -1,6 +1,7 @@
 "use client";
 
 import { Theme } from '../../types';
+import { useEffect } from "react";
 
 interface ThemeToggleProps {
   theme: Theme;
@@ -8,6 +9,15 @@ interface ThemeToggleProps {
 }
 
 export const ThemeToggle = ({ theme, setTheme }: ThemeToggleProps) => {
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

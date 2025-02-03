@@ -2,6 +2,7 @@
 
 import { content } from '../../content';
 import type { Lang, Theme } from '../../types';
+import { useEffect } from "react";
 
 interface ThemeSwitchProps {
   theme: Theme;
@@ -10,6 +11,15 @@ interface ThemeSwitchProps {
 }
 
 export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ theme, lang, onThemeChange }) => {
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
     <button
       onClick={() => onThemeChange(theme === 'dark' ? 'light' : 'dark')}
