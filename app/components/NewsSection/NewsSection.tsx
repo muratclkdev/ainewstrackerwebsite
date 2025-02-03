@@ -156,7 +156,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
                       <img
                         src={source.logo}
                         alt={source.name}
-                        className={`w-auto h-auto max-w-full max-h-full object-contain transition-all duration-300 dark:invert`}
+                        className="w-auto h-auto max-w-full max-h-full object-contain transition-all duration-300 dark:brightness-0 dark:invert"
                       />
                     ) : (
                       <Image
@@ -164,7 +164,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
                         alt={source.name}
                         width={120}
                         height={120}
-                        className={`w-auto h-auto max-w-full max-h-full object-contain transition-all duration-300 dark:invert`}
+                        className="w-auto h-auto max-w-full max-h-full object-contain transition-all duration-300 dark:brightness-0 dark:invert"
                       />
                     )}
                   </motion.div>
