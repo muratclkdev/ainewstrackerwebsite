@@ -5,20 +5,30 @@ import { fadeInUp } from '../../constants';
 import Image from "next/image";
 import { useState } from "react";
 import { Lang } from '../../types';
-import { ContentType, TelegramResponse } from '../../types';
+import { ContentType } from '../../types';
+import { useTheme } from 'next-themes';
 
 interface HeroProps {
   lang: Lang;
   content: ContentType;
 }
 
-const Hero: React.FC<HeroProps> = ({ lang, content }) => {
-  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
+export const Hero = ({ lang, content }: HeroProps) => {
   const [showTelegramModal, setShowTelegramModal] = useState(false);
-  const [telegramInviteLink, setTelegramInviteLink] = useState<string>('');
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-  const handleTelegramClick = async () => {
-    setShowTelegramModal(true);
+  const handleTelegramClick = () => {
+    // Feedback bölümüne yönlendir
+    const feedbackSection = document.querySelector('#feedback');
+    if (feedbackSection) {
+      feedbackSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Modal'ı göster
+    setTimeout(() => {
+      setShowTelegramModal(true);
+    }, 1000);
   };
 
   const handleUnderstand = async () => {
@@ -32,9 +42,7 @@ const Hero: React.FC<HeroProps> = ({ lang, content }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.inviteLink) {
-          setTelegramInviteLink(data.inviteLink);
-          setShowFeedbackMessage(true);
-          
+          // iOS cihazlar için özel yönlendirme
           if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             window.location.href = data.inviteLink;
           } else {
@@ -44,12 +52,7 @@ const Hero: React.FC<HeroProps> = ({ lang, content }) => {
       }
     } catch (error) {
       console.error('Error generating invite link:', error);
-      setTelegramInviteLink('https://t.me/ainewstracker');
     }
-
-    setTimeout(() => {
-      setShowFeedbackMessage(false);
-    }, 5000);
   };
 
   return (
@@ -82,57 +85,7 @@ const Hero: React.FC<HeroProps> = ({ lang, content }) => {
               >
                 {content[lang].telegram}
               </motion.button>
-              {telegramInviteLink && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-gray-400"
-                >
-                  {lang === 'tr' ? 'Eğer katılamadıysanız, lütfen bu linki kullanın:' : 'If you could not join, please use this link:'} {' '}
-                  <a
-                    href={telegramInviteLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-500 break-all"
-                  >
-                    {telegramInviteLink}
-                  </a>
-                </motion.div>
-              )}
             </div>
-            {showTelegramModal && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-                onClick={() => setShowTelegramModal(false)}
-              >
-                <motion.div
-                  className="bg-gray-900 p-6 rounded-2xl max-w-md w-full"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <h3 className="text-xl font-bold mb-4 text-white">
-                      {lang === 'tr' ? 'Önemli Bilgi' : 'Important Information'}
-                    </h3>
-                    <p className="mb-6 text-gray-300">
-                      {lang === 'tr' 
-                        ? 'Kanala katıldıktan sonra deneyimlerinizi bizimle paylaşmayı unutmayın. Geri bildirimleriniz bizim için çok değerli!' 
-                        : 'After joining the channel, please do not forget to share your experiences with us. Your feedback is very valuable to us!'}
-                    </p>
-                    <motion.button
-                      onClick={handleUnderstand}
-                      className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {lang === 'tr' ? 'Anladım' : 'I Understand'}
-                    </motion.button>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
           </div>
           <div className="flex-1">
             <div className="mockup-container">
@@ -150,6 +103,54 @@ const Hero: React.FC<HeroProps> = ({ lang, content }) => {
           </div>
         </div>
       </div>
+
+      {/* Telegram Modal */}
+      {showTelegramModal && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+          onClick={() => setShowTelegramModal(false)}
+        >
+          <motion.div
+            className={`p-8 rounded-2xl max-w-md w-full ${
+              isDark 
+                ? 'bg-[#1a1b26] border-gray-700' 
+                : 'bg-[#ffffff] border-gray-200'
+            } border shadow-lg feedback-card`}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center text-center">
+              <div className={`w-16 h-16 mb-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center ${
+                isDark ? 'opacity-100' : 'opacity-90'
+              }`}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-white">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                </svg>
+              </div>
+              <h3 className={`text-2xl font-bold mb-4 ${
+                isDark ? 'text-white' : 'text-gray-800'
+              }`}>
+                {content[lang].feedback}
+              </h3>
+              <p className={`mb-8 text-lg ${
+                isDark ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                {content[lang].feedbackDesc}
+              </p>
+              <motion.button
+                onClick={handleUnderstand}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 w-full sm:w-auto shadow-lg hover:shadow-xl"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {content[lang].understood}
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.section>
   );
 };

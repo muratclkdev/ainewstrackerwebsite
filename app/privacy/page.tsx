@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CustomCursor } from '../components/CustomCursor';
-import { TypewriterText } from '../components/TypewriterText';
 import { YandexMetrica } from '../components/analytics/YandexMetrica';
 import { CookieConsent } from '../components/analytics/CookieConsent';
+import { Header } from '../components/Header/Header';
+import { Footer } from '../components/Footer/Footer';
+import { CountdownTimer } from '../components/CountdownTimer/CountdownTimer';
+import type { Lang } from "../types";
 
-type Lang = 'tr' | 'en';
 type Theme = 'light' | 'dark';
 
 type ContentType = {
@@ -54,6 +54,8 @@ export default function Privacy() {
     minutes: 0,
     seconds: 0
   });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // 14 Şubat 2025 23:59:59
@@ -154,155 +156,94 @@ export default function Privacy() {
     }
   };
 
+  const handleJoinClick = () => {
+    // Feedback bölümüne yönlendirme
+    const feedbackSection = document.getElementById("feedback");
+    if (feedbackSection) {
+      feedbackSection.scrollIntoView({ behavior: "smooth" });
+    }
+    // Popup modali göster
+    setModalVisible(true);
+  };
+
+  const handleInvite = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/telegram/invite');
+      const data = await res.json();
+      if (data && data.inviteLink) {
+        window.location.href = data.inviteLink;
+      } else {
+        alert("Bir hata oluştu. Lütfen tekrar deneyiniz.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Bir hata oluştu. Lütfen tekrar deneyiniz.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <main className={`min-h-screen ${theme === 'light' ? 'light-theme' : ''}`}>
+    <div className={`min-h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-[#0f1117]'}`}>
       <YandexMetrica />
       <CustomCursor />
-      {/* Countdown Section */}
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeInUp}
-        className="fixed top-0 left-0 right-0 z-50 countdown-section border-b border-gray-800"
-      >
-        <div className="container mx-auto px-4 py-2">
-          <div className="text-center">
-            <h3 className="text-lg font-bold mb-2 text-white">
-              {content[lang].alphaAccess}
-            </h3>
-            <div className="flex justify-center items-center gap-6">
-              <div className="text-center">
-                <span className="text-2xl font-bold text-white">{timeLeft.days}</span>
-                <p className="text-xs text-gray-200">{content[lang].days}</p>
-              </div>
-              <div className="text-xl font-bold text-gray-300">:</div>
-              <div className="text-center">
-                <span className="text-2xl font-bold text-white">{timeLeft.hours}</span>
-                <p className="text-xs text-gray-200">{content[lang].hours}</p>
-              </div>
-              <div className="text-xl font-bold text-gray-300">:</div>
-              <div className="text-center">
-                <span className="text-2xl font-bold text-white">{timeLeft.minutes}</span>
-                <p className="text-xs text-gray-200">{content[lang].minutes}</p>
-              </div>
-              <div className="text-xl font-bold text-gray-300">:</div>
-              <div className="text-center">
-                <span className="text-2xl font-bold text-white">{timeLeft.seconds}</span>
-                <p className="text-xs text-gray-200">{content[lang].seconds}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Header */}
-      <header className="fixed top-[88px] left-0 right-0 z-40 border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-4">
-            <Image
-              src="/images/logo.png"
-              alt="AI News Tracker Logo"
-              width={70}
-              height={70}
-              className="rounded-lg navbar-logo"
-            />
-            <div className="hidden md:block">
-              <TypewriterText />
-            </div>
-          </Link>
-          <div className="flex gap-4">
-            {/* Theme Switch */}
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="theme-switch"
-              data-theme={theme}
-              aria-label={content[lang][theme === 'dark' ? 'lightMode' : 'darkMode']}
-            >
-              <div className="theme-icons">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                </svg>
-              </div>
-              <div className="switch-handle">
-                {theme === 'dark' ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
-                    <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="switch-icon">
-                    <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                  </svg>
-                )}
-              </div>
-            </button>
-            {/* Language Buttons */}
-            <button
-              onClick={() => setLang('tr')}
-              className={`px-4 py-2 rounded-full ${lang === 'tr' ? 'active' : ''}`}
-            >
-              TR
-            </button>
-            <button
-              onClick={() => setLang('en')}
-              className={`px-4 py-2 rounded-full ${lang === 'en' ? 'active' : ''}`}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-      </header>
-
+      <CountdownTimer lang={lang} theme={theme} />
+      <Header 
+        lang={lang} 
+        theme={theme} 
+        onThemeChange={(newTheme: Theme) => setTheme(newTheme)}
+        onLanguageChange={(newLang: Lang) => setLang(newLang)}
+      />
+      
       {/* Main Content */}
-      <div className="pt-[176px]">
-        <motion.section
+      <main className="pt-[220px] container mx-auto px-4 pb-12">
+        <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           variants={fadeInUp}
-          className="py-20"
+          className="max-w-4xl mx-auto space-y-12"
         >
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold mb-12 text-center">{content[lang].title}</h1>
-            
-            {/* Data Collection */}
-            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold mb-4">{content[lang].dataCollection}</h2>
-              {content[lang].dataCollectionDesc.map((desc, index) => (
-                <p key={index} className="mb-2">{desc}</p>
-              ))}
-            </motion.div>
+          <h1 className={`text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text`}>
+            {content[lang].title}
+          </h1>
 
-            {/* Data Usage */}
-            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold mb-4">{content[lang].dataUsage}</h2>
-              {content[lang].dataUsageDesc.map((desc, index) => (
-                <p key={index} className="mb-2">{desc}</p>
-              ))}
+          {/* Privacy Sections */}
+          {['dataCollection', 'dataUsage', 'security', 'cookies'].map((section) => (
+            <motion.div 
+              key={section} 
+              className={`p-8 rounded-2xl transition-all duration-300 hover:transform hover:scale-[1.02] ${
+                theme === 'light' 
+                  ? 'bg-white shadow-lg hover:shadow-xl border border-gray-100' 
+                  : 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50'
+              }`}
+              whileHover={{ y: -5 }}
+            >
+              <h2 className={`text-2xl font-bold mb-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+                {content[lang][section as keyof typeof content[typeof lang]]}
+              </h2>
+              <ul className="space-y-4">
+                {(content[lang][`${section}Desc` as keyof typeof content[typeof lang]] as string[]).map((desc, index) => (
+                  <li key={index} className={`
+                    ${theme === 'light' ? 'text-gray-600' : 'text-gray-300'}
+                    flex items-start gap-3
+                  `}>
+                    <span className="mt-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${theme === 'light' ? 'text-blue-500' : 'text-blue-400'}`} viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                    {desc}
+                  </li>
+                ))}
+              </ul>
             </motion.div>
+          ))}
+        </motion.div>
+      </main>
 
-            {/* Security */}
-            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold mb-4">{content[lang].security}</h2>
-              {content[lang].securityDesc.map((desc, index) => (
-                <p key={index} className="mb-2">{desc}</p>
-              ))}
-            </motion.div>
-
-            {/* Cookies */}
-            <motion.div variants={fadeInUp} className="mb-12 about-card p-8 rounded-xl">
-              <h2 className="text-2xl font-semibold mb-4">{content[lang].cookies}</h2>
-              {content[lang].cookiesDesc.map((desc, index) => (
-                <p key={index} className="mb-2">{desc}</p>
-              ))}
-            </motion.div>
-          </div>
-        </motion.section>
-      </div>
+      <Footer lang={lang} />
       <CookieConsent lang={lang} />
-    </main>
+    </div>
   );
 } 

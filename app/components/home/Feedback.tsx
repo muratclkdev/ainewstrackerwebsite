@@ -58,7 +58,7 @@ export const Feedback = ({ lang, showFeedbackMessage, content }: FeedbackProps) 
   };
 
   return (
-    <section className="feedback-section py-20 dark:bg-black bg-gray-100">
+    <section id="feedback" className="feedback-section py-20 dark:bg-black bg-gray-100">
       <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"

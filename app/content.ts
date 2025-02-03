@@ -59,7 +59,12 @@ export const content: ContentType = {
     understood: "Anladım",
     binanceDonate: "Binance ile Bağış Yap",
     metamaskDonate: "MetaMask ile Bağış Yap",
-    founder: "Kurucu & Geliştirici"
+    founder: "Kurucu & Geliştirici",
+    joinTelegram: "Telegram Kanalına Katıl",
+    telegramModalTitle: "Telegram Kanalına Katılım",
+    telegramModalDescription: "Telegram kanalımıza katılmadan önce geri bildirim formunu doldurmanız gerekmektedir. Devam etmek için 'Anladım' butonuna tıklayın.",
+    cancel: "İptal",
+    loading: "Yükleniyor..."
   },
   en: {
     title: "AI News Tracker",
@@ -119,6 +124,11 @@ export const content: ContentType = {
     understood: "I Understand",
     binanceDonate: "Donate with Binance",
     metamaskDonate: "Donate with MetaMask",
-    founder: "Founder & Developer"
+    founder: "Founder & Developer",
+    joinTelegram: "Join Telegram Channel",
+    telegramModalTitle: "Join Telegram Channel",
+    telegramModalDescription: "Before joining our Telegram channel, please fill out the feedback form. Click 'I Understand' to continue.",
+    cancel: "Cancel",
+    loading: "Loading..."
   }
 } as const; 
