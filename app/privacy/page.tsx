@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { CustomCursor } from '../components/CustomCursor';
 import { YandexMetrica } from '../components/analytics/YandexMetrica';
 import { CookieConsent } from '../components/analytics/CookieConsent';
-import { Header } from '../components/shared/Header';
-import { Footer } from '../components/shared/Footer';
+import { Header } from '../components/Header/Header';
+import { Footer } from '../components/Footer/Footer';
 import { Countdown } from '../components/home/Countdown';
 import type { Lang } from "../types";
 
@@ -188,7 +188,10 @@ export default function Privacy() {
     <div className={`min-h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-[#0f1117]'}`}>
       <YandexMetrica />
       <CustomCursor />
-      <Countdown lang={lang} />
+      <Countdown 
+        lang={lang} 
+        targetDate={new Date('2025-02-14T23:59:59')} 
+      />
       <Header 
         lang={lang} 
         theme={theme} 
