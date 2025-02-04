@@ -3,14 +3,39 @@
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../../constants';
 import { Lang } from '../../types';
-import { ContentType } from '../../types';
 
 interface FeaturesProps {
   lang: Lang;
-  content: ContentType;
 }
 
-export const Features = ({ lang, content }: FeaturesProps) => {
+const texts = {
+  tr: {
+    featuresTitle: "Öne Çıkan Özellikler",
+    featuresDesc: "Platformumuzun sunduğu özellikler hakkında detaylı açıklama.",
+    factualTitle: "Doğrulanmış Haberler",
+    factualDesc: "Güvenilir kaynaklardan doğrulanmış haberler.",
+    investTitle: "Yatırım Fırsatları",
+    investDesc: "Potansiyel yatırım fırsatlarını kaçırmayın.",
+    listingTitle: "Borsa Listeleme",
+    listingDesc: "Yeni coin ve token listeleme haberleri.",
+    summaryTitle: "Haber Özetleri",
+    summaryDesc: "Önemli haberlerin kısa özetleri."
+  },
+  en: {
+    featuresTitle: "Featured Features",
+    featuresDesc: "A detailed description of the features offered by our platform.",
+    factualTitle: "Verified News",
+    factualDesc: "News verified by reliable sources.",
+    investTitle: "Investment Opportunities",
+    investDesc: "Don't miss potential investment opportunities.",
+    listingTitle: "Exchange Listing",
+    listingDesc: "New coin and token listing news.",
+    summaryTitle: "News Summaries",
+    summaryDesc: "Brief summaries of important news."
+  }
+};
+
+export default function Features({ lang }: FeaturesProps) {
   return (
     <motion.section
       initial="hidden"
@@ -21,7 +46,7 @@ export const Features = ({ lang, content }: FeaturesProps) => {
     >
       <div className="container mx-auto px-4">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-          {content[lang].features}
+          {texts[lang].featuresTitle}
         </h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto place-items-start">
@@ -37,8 +62,8 @@ export const Features = ({ lang, content }: FeaturesProps) => {
                 </svg>
               </div>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">{content[lang].factualTitle}</h3>
-            <p className="text-gray-600 dark:text-gray-300">{content[lang].factualDesc}</p>
+            <h3 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">{texts[lang].factualTitle}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{texts[lang].factualDesc}</p>
           </motion.div>
 
           {/* Yatırım Fırsatları */}
@@ -53,8 +78,8 @@ export const Features = ({ lang, content }: FeaturesProps) => {
                 </svg>
               </div>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">{content[lang].investTitle}</h3>
-            <p className="text-gray-600 dark:text-gray-300">{content[lang].investDesc}</p>
+            <h3 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">{texts[lang].investTitle}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{texts[lang].investDesc}</p>
           </motion.div>
 
           {/* Borsa Listeleme */}
@@ -69,8 +94,8 @@ export const Features = ({ lang, content }: FeaturesProps) => {
                 </svg>
               </div>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-purple-600 dark:text-purple-400">{content[lang].listingTitle}</h3>
-            <p className="text-gray-600 dark:text-gray-300">{content[lang].listingDesc}</p>
+            <h3 className="text-xl font-bold mb-4 text-purple-600 dark:text-purple-400">{texts[lang].listingTitle}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{texts[lang].listingDesc}</p>
           </motion.div>
 
           {/* Haber Özetleri */}
@@ -86,13 +111,11 @@ export const Features = ({ lang, content }: FeaturesProps) => {
               </div>
             </div>
             
-            <h3 className="text-xl font-bold mb-4 text-yellow-600 dark:text-yellow-400">{content[lang].summaryTitle}</h3>
-            <p className="text-gray-600 dark:text-gray-300">{content[lang].summaryDesc}</p>
+            <h3 className="text-xl font-bold mb-4 text-yellow-600 dark:text-yellow-400">{texts[lang].summaryTitle}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{texts[lang].summaryDesc}</p>
           </motion.div>
         </div>
       </div>
     </motion.section>
   );
-};
-
-export default Features; 
+} 

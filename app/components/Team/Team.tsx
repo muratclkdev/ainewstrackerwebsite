@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { content } from '../../content';
 import type { Lang } from '../../types';
 import { GithubIcon, CoffeeIcon, CopyIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -10,6 +9,23 @@ import { useState } from 'react';
 interface TeamProps {
   lang: Lang;
 }
+
+const texts = {
+  tr: {
+    team: "Takım",
+    role: "Kurucu & Geliştirici",
+    founder: "Murat Çelik",
+    github: "GitHub'da İncele",
+    binanceDonate: "Binance'ye Bağış"
+  },
+  en: {
+    team: "Team",
+    role: "Founder & Developer",
+    founder: "Murat Celik",
+    github: "View on GitHub",
+    binanceDonate: "Donate to Binance"
+  }
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
@@ -23,7 +39,7 @@ const fadeInUp = {
   }
 };
 
-export const Team: React.FC<TeamProps> = ({ lang }) => {
+export default function Team({ lang }: TeamProps) {
   const [showBinanceModal, setShowBinanceModal] = useState(false);
   const binanceId = "40173249";
 
@@ -41,7 +57,7 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
           variants={fadeInUp}
           className="text-4xl font-bold text-center mb-12 text-white"
         >
-          {content[lang].team}
+          {texts[lang].team}
         </motion.h2>
         <div className="flex justify-center">
           <motion.div
@@ -60,7 +76,7 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
                 className="rounded-full mb-4 border-4 border-blue-500/20"
               />
               <h3 className="text-xl font-bold text-white mb-1">Murat Çelik</h3>
-              <p className="text-gray-400 mb-6">{content[lang].founder}</p>
+              <p className="text-gray-400 mb-6">{texts[lang].role}</p>
               
               <div className="flex flex-col gap-4 w-full">
                 <motion.a
@@ -72,7 +88,7 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <GithubIcon className="w-5 h-5" />
-                  {content[lang].github}
+                  {texts[lang].github}
                 </motion.a>
                 <motion.a
                   href="https://buymeacoffee.com/muratclkdev"
@@ -97,7 +113,7 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
                     <path d="M12 23.4285L19.0468 16.3817L21.6666 19.0015L12 28.6682L2.33337 19.0015L4.95321 16.3817L12 23.4285Z" />
                     <path d="M12 14.7463L14.8778 11.8685L17.4502 14.4409L12 19.8911L6.54985 14.4409L9.12222 11.8685L12 14.7463Z" />
                   </svg>
-                  {content[lang].binanceDonate}
+                  {texts[lang].binanceDonate}
                 </motion.button>
               </div>
             </div>
@@ -142,4 +158,4 @@ export const Team: React.FC<TeamProps> = ({ lang }) => {
       </div>
     </section>
   );
-}; 
+} 

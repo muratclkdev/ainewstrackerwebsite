@@ -10,5 +10,12 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  // ...
+  env: {
+    browser: true,
+    es2021: true,
+    node: true
+  },
+  rules: {
+    // Özel kurallarınızı buraya ekleyebilirsiniz
+  }
 }; 

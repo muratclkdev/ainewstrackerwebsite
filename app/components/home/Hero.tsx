@@ -5,15 +5,13 @@ import { fadeInUp } from '../../constants';
 import Image from "next/image";
 import { useState } from "react";
 import { Lang } from '../../types';
-import { ContentType } from '../../types';
 import { useTheme } from 'next-themes';
 
 interface HeroProps {
   lang: Lang;
-  content: ContentType;
 }
 
-export const Hero = ({ lang, content }: HeroProps) => {
+export const Hero = ({ lang }: HeroProps) => {
   const [showTelegramModal, setShowTelegramModal] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -69,13 +67,13 @@ export const Hero = ({ lang, content }: HeroProps) => {
               variants={fadeInUp}
               className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text"
             >
-              {content[lang].title}
+              {/* {content[lang].title} */}
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               className="text-xl text-gray-300"
             >
-              {content[lang].description}
+              {/* {content[lang].description} */}
             </motion.p>
             <div className="space-y-4">
               <motion.button
@@ -83,7 +81,7 @@ export const Hero = ({ lang, content }: HeroProps) => {
                 onClick={handleTelegramClick}
                 className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto"
               >
-                {content[lang].telegram}
+                {/* {content[lang].telegram} */}
               </motion.button>
             </div>
           </div>
@@ -132,12 +130,12 @@ export const Hero = ({ lang, content }: HeroProps) => {
               <h3 className={`text-2xl font-bold mb-4 ${
                 isDark ? 'text-white' : 'text-gray-800'
               }`}>
-                {content[lang].feedback}
+                {/* {content[lang].feedback} */}
               </h3>
               <p className={`mb-8 text-lg ${
                 isDark ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                {content[lang].feedbackDesc}
+                {/* {content[lang].feedbackDesc} */}
               </p>
               <motion.button
                 onClick={handleUnderstand}
@@ -145,7 +143,7 @@ export const Hero = ({ lang, content }: HeroProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {content[lang].understood}
+                {/* {content[lang].understood} */}
               </motion.button>
             </div>
           </motion.div>

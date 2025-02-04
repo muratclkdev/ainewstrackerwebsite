@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { content } from '../../content';
 import type { Lang } from '../../types';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -10,6 +9,31 @@ import { useEffect, useState } from 'react';
 interface NewsSectionProps {
   lang: Lang;
 }
+
+const texts = {
+  tr: {
+    features: "Özellikler",
+    factualTitle: "Doğrulanmış Haberler",
+    factualDesc: "Güvenilir kaynaklardan doğrulanmış haberler",
+    investTitle: "Yatırım Fırsatları",
+    investDesc: "Potansiyel yatırım fırsatlarını kaçırmayın",
+    listingTitle: "Borsa Listeleme",
+    listingDesc: "Yeni coin ve token listeleme haberleri",
+    summaryTitle: "Haber Özetleri",
+    summaryDesc: "Önemli haberlerin kısa özetleri"
+  },
+  en: {
+    features: "Features",
+    factualTitle: "Verified News",
+    factualDesc: "Verified news from reliable sources",
+    investTitle: "Investment Opportunities",
+    investDesc: "Don't miss potential investment opportunities",
+    listingTitle: "Exchange Listing",
+    listingDesc: "New coin and token listing news",
+    summaryTitle: "News Summaries",
+    summaryDesc: "Brief summaries of important news"
+  }
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
@@ -85,7 +109,7 @@ const newsSourcesList = [
   }
 ];
 
-export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
+export default function NewsSection({ lang }: NewsSectionProps) {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
@@ -115,7 +139,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {content[lang].newsSources}
+            {texts[lang].features}
           </motion.h2>
           <motion.p 
             className="text-lg mb-16 text-gray-600 dark:text-gray-300"
@@ -123,7 +147,16 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            {content[lang].newsSourcesDesc}
+            {texts[lang].factualTitle}
+          </motion.p>
+
+          <motion.p 
+            className="text-lg mb-16 text-gray-600 dark:text-gray-300"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            {texts[lang].factualDesc}
           </motion.p>
 
           <motion.div 
@@ -182,4 +215,4 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ lang }) => {
       </div>
     </section>
   );
-}; 
+} 

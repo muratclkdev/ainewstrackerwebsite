@@ -2,12 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { content } from '../../content';
 import type { Lang } from '../../types';
 
 interface CountdownTimerProps {
   lang: Lang;
 }
+
+const texts = {
+  tr: {
+    days: "Gün",
+    hours: "Saat",
+    minutes: "Dakika",
+    seconds: "Saniye",
+    alphaAccess: "Alpha Erişimi"
+  },
+  en: {
+    days: "Days",
+    hours: "Hours",
+    minutes: "Minutes",
+    seconds: "Seconds",
+    alphaAccess: "Alpha Access"
+  }
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
@@ -21,7 +37,7 @@ const fadeInUp = {
   }
 };
 
-export const CountdownTimer: React.FC<CountdownTimerProps> = ({ lang }) => {
+export default function CountdownTimer({ lang }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -63,31 +79,31 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ lang }) => {
       <div className="container mx-auto px-4 py-2">
         <div className="text-center">
           <h3 className="text-lg font-bold mb-2 text-white">
-            {content[lang].alphaAccess}
+            {texts[lang].alphaAccess}
           </h3>
           <div className="flex justify-center items-center gap-6">
             <div className="text-center">
               <span className="text-2xl font-bold text-white">{timeLeft.days}</span>
-              <p className="text-xs text-gray-200">{content[lang].days}</p>
+              <p className="text-xs text-gray-200">{texts[lang].days}</p>
             </div>
             <div className="text-xl font-bold text-gray-300">:</div>
             <div className="text-center">
               <span className="text-2xl font-bold text-white">{timeLeft.hours}</span>
-              <p className="text-xs text-gray-200">{content[lang].hours}</p>
+              <p className="text-xs text-gray-200">{texts[lang].hours}</p>
             </div>
             <div className="text-xl font-bold text-gray-300">:</div>
             <div className="text-center">
               <span className="text-2xl font-bold text-white">{timeLeft.minutes}</span>
-              <p className="text-xs text-gray-200">{content[lang].minutes}</p>
+              <p className="text-xs text-gray-200">{texts[lang].minutes}</p>
             </div>
             <div className="text-xl font-bold text-gray-300">:</div>
             <div className="text-center">
               <span className="text-2xl font-bold text-white">{timeLeft.seconds}</span>
-              <p className="text-xs text-gray-200">{content[lang].seconds}</p>
+              <p className="text-xs text-gray-200">{texts[lang].seconds}</p>
             </div>
           </div>
         </div>
       </div>
     </motion.div>
   );
-}; 
+} 

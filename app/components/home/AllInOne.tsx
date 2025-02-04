@@ -2,13 +2,22 @@
 
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../../constants';
-import { Lang } from '../../types';
-import { ContentType } from '../../types';
+import type { Lang } from '../../types';
 
 interface AllInOneProps {
   lang: Lang;
-  content: ContentType;
 }
+
+const texts = {
+  tr: {
+    allInOne: "Tüm Özellikler",
+    allInOneDesc: "Hepsini tek yerden yönetebilme özelliği ile, platformumuzda neler yapabileceğinizi keşfedin."
+  },
+  en: {
+    allInOne: "All In One",
+    allInOneDesc: "Discover what you can do on our platform, all managed in one place."
+  }
+};
 
 const glowVariant = {
   initial: { opacity: 0.5, scale: 0.9 },
@@ -47,7 +56,7 @@ const pulseVariant = {
   }
 };
 
-export const AllInOne = ({ lang, content }: AllInOneProps) => {
+export default function AllInOne({ lang }: AllInOneProps) {
   return (
     <motion.section
       initial="hidden"
@@ -118,7 +127,7 @@ export const AllInOne = ({ lang, content }: AllInOneProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                {content[lang].allInOne}
+                {texts[lang].allInOne}
               </motion.h2>
             </div>
 
@@ -129,7 +138,7 @@ export const AllInOne = ({ lang, content }: AllInOneProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              {content[lang].allInOneDesc}
+              {texts[lang].allInOneDesc}
             </motion.p>
 
             {/* Dekoratif çizgiler */}
@@ -158,6 +167,4 @@ export const AllInOne = ({ lang, content }: AllInOneProps) => {
       </div>
     </motion.section>
   );
-};
-
-export default AllInOne; 
+} 

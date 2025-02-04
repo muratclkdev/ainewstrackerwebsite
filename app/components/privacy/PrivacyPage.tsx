@@ -1,7 +1,7 @@
 "use client";
 
-import { Header } from "../../components/Header/Header";
-import { Footer } from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import { Countdown } from "../../components/home/Countdown";
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../../constants';
