@@ -1,11 +1,14 @@
 import { ContentType } from './types';
-
 export const content: ContentType = {
   tr: {
     title: "AI News Tracker",
     description: "Kripto para haberleri yapay zeka destekli takip sistemi",
     github: "GitHub'da İncele",
     features: "Özellikler",
+    joinTelegram: "Telegram Grubuna Katıl",
+    telegramModalTitle: "Telegram'a Katılın",
+    telegramModalDescription: "Devam etmek için Telegram'a katılın",
+    cancel: "İptal",
     gptTitle: "GPT Destekli",
     gptDesc: "ChatGPT ile güçlendirilmiş haber analizi ve özetleme",
     realTimeTitle: "Gerçek Zamanlı",
@@ -38,7 +41,7 @@ export const content: ContentType = {
     listingDesc: "Yeni coin ve token listeleme haberleri",
     summaryTitle: "Haber Özetleri",
     summaryDesc: "Önemli haberlerin kısa özetleri",
-    telegram: "Telegram Kanalımıza Katıl",
+    telegram: "Telegram",
     binancePay: "Binance Pay ile Bağış Yap",
     alphaAccess: "Alpha Erişimi",
     days: "Gün",
@@ -63,6 +66,10 @@ export const content: ContentType = {
     description: "AI-powered crypto news tracking system",
     github: "View on GitHub",
     features: "Features",
+    joinTelegram: "Join Our Telegram Channel",
+    telegramModalTitle: "Telegram Channel",
+    telegramModalDescription: "Join our Telegram group to stay updated.",
+    cancel: "Cancel",
     gptTitle: "GPT Powered",
     gptDesc: "News analysis and summarization powered by ChatGPT",
     realTimeTitle: "Real-Time",

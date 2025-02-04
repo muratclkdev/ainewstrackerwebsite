@@ -59,6 +59,8 @@ const tr = {
   loading: "Yükleniyor..."
 };
 
-const content = { tr };
+const en = { ...tr };
 
+const content = { tr, en };
+export { content };
 export default content; 

@@ -6,6 +6,7 @@ export interface ContentType {
     title: string;
     description: string;
     telegram: string;
+    joinTelegram: string;
     telegramModalTitle: string;
     telegramModalDescription: string;
     cancel: string;
@@ -125,4 +126,8 @@ interface ContentValues {
   binanceDonate: string;
   metamaskDonate: string;
   founder: string;
+  joinTelegram: string;
+  telegramModalTitle: string;
+  telegramModalDescription: string;
+  cancel: string;
 } 
