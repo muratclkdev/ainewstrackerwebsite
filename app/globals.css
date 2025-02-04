@@ -1144,3 +1144,32 @@ header button.active {
 .dark .news-source-card {
   background-color: #18181B;
 }
+
+/* ------------------------------------------
+   Privacy Page Card Stilleri
+------------------------------------------- */
+.privacy-card {
+  @apply p-8 rounded-2xl transition-all duration-300;
+}
+
+[data-theme="light"] .privacy-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+[data-theme="light"] .privacy-card:hover {
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .privacy-card {
+  background-color: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  /* Dark modda bulanıklık efekti eklemek için */
+  backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .privacy-card:hover {
+  transform: translateY(-5px);
+}

@@ -46,6 +46,9 @@ export const Countdown = ({ targetDate, lang = 'tr' }: CountdownProps) => {
       className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-900/90 via-purple-900/90 to-blue-900/90 backdrop-blur-sm py-2 border-b border-blue-800/50"
     >
       <div className="container mx-auto px-4">
+        <h2 className="text-center text-white text-lg mb-2">
+          {lang === 'tr' ? 'Alpha Erişimine Kalan Süre' : 'Time Left for Alpha Access'}
+        </h2>
         <div className="flex justify-center items-center gap-8 text-white">
           <div className="text-center">
             <div className="text-3xl font-bold">{timeLeft.days}</div>
