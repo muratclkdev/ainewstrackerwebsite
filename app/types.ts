@@ -6,6 +6,9 @@ export interface ContentType {
     title: string;
     description: string;
     telegram: string;
+    telegramModalTitle: string;
+    telegramModalDescription: string;
+    cancel: string;
     feedbackSuccess: string;
     feedback: string;
     feedbackDesc: string;
@@ -56,6 +59,7 @@ export interface ContentType {
     binanceDonate: string;
     metamaskDonate: string;
     founder: string;
+    loading: string;
   }
 }
 
