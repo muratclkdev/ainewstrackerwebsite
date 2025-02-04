@@ -35,6 +35,10 @@ export type ContentType = {
     summaryTitle: string;
     summaryDesc: string;
     telegram: string;
+    joinTelegram: string;
+    telegramModalTitle: string;
+    telegramModalDescription: string;
+    cancel: string;
     binancePay: string;
     alphaAccess: string;
     days: string;
