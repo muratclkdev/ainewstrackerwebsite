@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TypewriterText } from '../TypewriterText';
@@ -35,7 +36,7 @@ const texts = {
 
 export default function Header({ lang, theme, onThemeChange, onLanguageChange }: HeaderProps) {
   return (
-    <header className="fixed top-[88px] left-0 right-0 z-40 border-b border-gray-800">
+    <header className="navbar">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-4">
           <Image
@@ -43,9 +44,13 @@ export default function Header({ lang, theme, onThemeChange, onLanguageChange }:
             alt="AI News Tracker Logo"
             width={70}
             height={70}
-            className="rounded-lg navbar-logo"
+            className={`navbar-logo ${
+              theme === 'dark'
+                ? 'filter brightness-0 invert'
+                : 'filter brightness-0 contrast-200'
+            }`}
           />
-          <div className="hidden md:block">
+          <div className="hidden md:block text-lg font-bold text-text">
             <TypewriterText />
           </div>
         </Link>

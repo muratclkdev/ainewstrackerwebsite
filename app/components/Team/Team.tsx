@@ -5,6 +5,7 @@ import Image from 'next/image';
 import type { Lang } from '../../types';
 import { GithubIcon, CoffeeIcon, CopyIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useTheme } from 'next-themes';
 
 interface TeamProps {
   lang: Lang;
@@ -42,20 +43,22 @@ const fadeInUp = {
 export default function Team({ lang }: TeamProps) {
   const [showBinanceModal, setShowBinanceModal] = useState(false);
   const binanceId = "40173249";
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(binanceId);
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+    <section className={`py-20 ${isDark ? 'bg-[#0f1117]' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-4">
         <motion.h2
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           variants={fadeInUp}
-          className="text-4xl font-bold text-center mb-12 text-white"
+          className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text"
         >
           {texts[lang].team}
         </motion.h2>
@@ -65,7 +68,11 @@ export default function Team({ lang }: TeamProps) {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl max-w-sm w-full relative"
+            className={`p-8 rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300 border ${
+              isDark 
+                ? 'bg-[#1a1b26] border-gray-800' 
+                : 'bg-white border-gray-200'
+            } text-center max-w-sm`}
           >
             <div className="flex flex-col items-center">
               <Image
@@ -75,7 +82,9 @@ export default function Team({ lang }: TeamProps) {
                 height={120}
                 className="rounded-full mb-4 border-4 border-blue-500/20"
               />
-              <h3 className="text-xl font-bold text-white mb-1">Murat Çelik</h3>
+              <h3 className={`text-xl font-bold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                Murat Çelik
+              </h3>
               <p className="text-gray-400 mb-6">{texts[lang].role}</p>
               
               <div className="flex flex-col gap-4 w-full">
@@ -128,7 +137,9 @@ export default function Team({ lang }: TeamProps) {
                 onClick={() => setShowBinanceModal(false)}
               >
                 <motion.div
-                  className="bg-gray-800 p-6 rounded-2xl max-w-sm w-full"
+                  className={`p-6 rounded-2xl max-w-sm w-full ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                  }`}
                   onClick={e => e.stopPropagation()}
                 >
                   <div className="flex flex-col items-center">
@@ -139,12 +150,20 @@ export default function Team({ lang }: TeamProps) {
                       height={300}
                       className="rounded-xl mb-4"
                     />
-                    <p className="text-gray-300 mb-4">Binance ID:</p>
-                    <div className="flex items-center gap-2 bg-gray-700 px-4 py-2 rounded-lg">
-                      <span className="text-white">{binanceId}</span>
+                    <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Binance ID:
+                    </p>
+                    <div className={`flex items-center gap-2 ${
+                      isDark ? 'bg-gray-700' : 'bg-gray-100'
+                    } px-4 py-2 rounded-lg`}>
+                      <span className={isDark ? 'text-white' : 'text-gray-900'}>
+                        {binanceId}
+                      </span>
                       <button
                         onClick={copyToClipboard}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className={`${
+                          isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                        } transition-colors`}
                       >
                         <CopyIcon className="w-5 h-5" />
                       </button>

@@ -7,21 +7,23 @@ interface LanguageSelectorProps {
   onLanguageChange: (lang: Lang) => void;
 }
 
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ lang, onLanguageChange }) => {
+export function LanguageSelector({ lang, onLanguageChange }: LanguageSelectorProps) {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-2">
       <button
         onClick={() => onLanguageChange('tr')}
-        className={`px-4 py-2 rounded-full ${lang === 'tr' ? 'active' : ''}`}
+        className={`lang-button ${lang === 'tr' ? 'active' : ''}`}
+        aria-label="Türkçe"
       >
         TR
       </button>
       <button
         onClick={() => onLanguageChange('en')}
-        className={`px-4 py-2 rounded-full ${lang === 'en' ? 'active' : ''}`}
+        className={`lang-button ${lang === 'en' ? 'active' : ''}`}
+        aria-label="English"
       >
         EN
       </button>
     </div>
   );
-}; 
+} 

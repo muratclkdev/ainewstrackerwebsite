@@ -26,7 +26,7 @@ const texts = {
 
 export default function Footer({ lang }: FooterProps) {
   return (
-    <footer className="py-8 bg-gray-900">
+    <footer className="py-8 bg-headerbg border-t border-border">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 mb-4 md:mb-0">

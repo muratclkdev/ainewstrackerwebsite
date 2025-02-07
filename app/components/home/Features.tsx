@@ -53,7 +53,7 @@ export default function Features({ lang }: FeaturesProps) {
           {/* Doğrulanmış Haberler */}
           <motion.div 
             variants={fadeInUp} 
-            className="feature-card w-full h-full bg-white dark:bg-[#1a1b26] rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl dark:border dark:border-gray-800 flex flex-col items-center text-center"
+            className="feature-card w-full h-full bg-cardbg rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-border flex flex-col items-center text-center"
           >
             <div className="mb-6 relative">
               <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function Features({ lang }: FeaturesProps) {
           {/* Yatırım Fırsatları */}
           <motion.div 
             variants={fadeInUp} 
-            className="feature-card w-full h-full bg-white dark:bg-[#1a1b26] rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl dark:border dark:border-gray-800 flex flex-col items-center text-center"
+            className="feature-card w-full h-full bg-cardbg rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-border flex flex-col items-center text-center"
           >
             <div className="mb-6 relative">
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-500/10 flex items-center justify-center">
@@ -85,7 +85,7 @@ export default function Features({ lang }: FeaturesProps) {
           {/* Borsa Listeleme */}
           <motion.div 
             variants={fadeInUp} 
-            className="feature-card w-full h-full bg-white dark:bg-[#1a1b26] rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl dark:border dark:border-gray-800 flex flex-col items-center text-center"
+            className="feature-card w-full h-full bg-cardbg rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-border flex flex-col items-center text-center"
           >
             <div className="mb-6 relative">
               <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
@@ -101,7 +101,7 @@ export default function Features({ lang }: FeaturesProps) {
           {/* Haber Özetleri */}
           <motion.div 
             variants={fadeInUp} 
-            className="feature-card w-full h-full bg-white dark:bg-[#1a1b26] rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl dark:border dark:border-gray-800 flex flex-col items-center text-center"
+            className="feature-card w-full h-full bg-cardbg rounded-xl p-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-border flex flex-col items-center text-center"
           >
             <div className="mb-6 relative">
               <div className="w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-500/10 flex items-center justify-center">

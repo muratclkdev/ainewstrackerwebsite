@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import type { Lang } from '../../types';
@@ -34,29 +34,51 @@ const texts = {
 export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { theme } = useTheme();
+
+  const PUBLIC_KEY = "RuTlqyGrtfjYDeqgt";
+
+  useEffect(() => {
+    emailjs.init(PUBLIC_KEY);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    
+    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 
+        !process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID) {
+      setError('EmailJS yapılandırması eksik. Lütfen sistem yöneticisi ile iletişime geçin.');
+      return;
+    }
+
     if (formRef.current) {
       try {
-        await emailjs.sendForm(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        const result = await emailjs.sendForm(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
           formRef.current,
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+          PUBLIC_KEY
         );
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-        formRef.current.reset();
-      } catch (error) {
-        console.error('Error:', error);
+
+        if (result.status === 200) {
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
+          formRef.current.reset();
+        } else {
+          throw new Error(`EmailJS yanıt kodu: ${result.status}`);
+        }
+      } catch (error: any) {
+        console.error('EmailJS Error:', error);
+        const errorMessage = error?.message || error?.text || 'Bilinmeyen bir hata oluştu';
+        setError(`Mesaj gönderilirken bir hata oluştu: ${errorMessage}. Lütfen daha sonra tekrar deneyin.`);
       }
     }
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black">
+    <section className="py-20 bg-cardbg">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -78,7 +100,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 name="name"
                 placeholder={texts[lang].feedbackName}
                 required
-                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
             <div>
@@ -87,7 +109,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 name="email"
                 placeholder={texts[lang].feedbackEmail}
                 required
-                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
             <div>
@@ -96,16 +118,26 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 placeholder={texts[lang].feedbackMessage}
                 required
                 rows={5}
-                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
             <button
               type="submit"
-              className="w-full py-3 px-6 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+              className="px-6 py-2 bg-buttonbg text-buttontext rounded-lg font-medium hover:bg-buttonhover transition-all"
             >
               {texts[lang].feedbackSubmit}
             </button>
           </form>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg text-center"
+            >
+              {error}
+            </motion.div>
+          )}
 
           {showSuccess && (
             <motion.div

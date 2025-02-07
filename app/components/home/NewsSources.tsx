@@ -1,72 +1,79 @@
 "use client";
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../../constants';
-import { Lang } from '../../types';
-import Image from "next/image";
-import Link from "next/link";
+import type { Lang } from '../../types';
+import Image from 'next/image';
 
 interface NewsSourcesProps {
   lang: Lang;
-  content: {
-    [key in Lang]: {
-      newsSources: string;
-      newsSourcesDesc: string;
-    }
-  };
-  sources: Array<{
-    name: string;
-    logo: string;
-    url: string;
-  }>;
 }
 
-export const NewsSources = ({ lang, content, sources }: NewsSourcesProps) => {
+export const NewsSources: React.FC<NewsSourcesProps> = ({ lang }) => {
+  const sources = [
+    {
+      name: "CoinTelegraph",
+      logo: "/images/sources/cointelegraph.png",
+      url: "https://cointelegraph.com/"
+    },
+    {
+      name: "CoinDesk",
+      logo: "/images/sources/coindesk.png",
+      url: "https://www.coindesk.com/"
+    },
+    {
+      name: "The Crypto Basic",
+      logo: "/images/sources/cryptobasic.png",
+      url: "https://thecryptobasic.com/"
+    },
+    {
+      name: "Crypto News",
+      logo: "/images/sources/cryptonews.png",
+      url: "https://cryptonews.com/"
+    }
+  ];
+
   return (
     <motion.section
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
-      className="news-section py-20"
+      variants={fadeInUp}
+      className="py-24"
     >
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-          {content[lang].newsSources}
-        </h2>
-        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-          {content[lang].newsSourcesDesc}
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-          {sources.map((source) => (
-            <motion.div
-              key={source.name}
-              variants={fadeInUp}
-              className="group relative"
-            >
-              <Link
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.h2
+            variants={fadeInUp}
+            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text mb-16"
+          >
+            {lang === 'tr' ? 'Haber Kaynakları' : 'News Sources'}
+          </motion.h2>
+
+          <motion.div
+            variants={fadeInUp}
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center"
+          >
+            {sources.map((source) => (
+              <motion.a
+                key={source.name}
                 href={source.url}
                 target="_blank"
-                className="block bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl hover:scale-105 transition-all duration-300 h-[180px] w-full border border-gray-800/50 hover:border-blue-500/50"
+                rel="noopener noreferrer"
+                className="w-full max-w-[200px] hover:scale-105 transition-transform duration-300"
+                whileHover={{ y: -5 }}
               >
-                <div className="flex flex-col items-center justify-center h-full">
-                  <div className="relative w-24 h-24 mb-4">
-                    <Image
-                      src={source.logo}
-                      alt={source.name}
-                      fill
-                      className="object-contain news-source-logo group-hover:brightness-110 transition-all duration-300 p-2"
-                      sizes="(max-width: 768px) 96px, 96px"
-                      priority={source.name === 'Crypto.news'}
-                      quality={100}
-                    />
-                  </div>
-                  <span className="text-sm text-gray-400 group-hover:text-blue-400 transition-colors text-center">
-                    {source.name}
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                <Image
+                  src={source.logo}
+                  alt={source.name}
+                  width={200}
+                  height={100}
+                  className="w-full h-auto object-contain filter dark:invert"
+                />
+              </motion.a>
+            ))}
+          </motion.div>
         </div>
       </div>
     </motion.section>

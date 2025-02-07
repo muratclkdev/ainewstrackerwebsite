@@ -12,7 +12,7 @@ interface NewsSectionProps {
 
 const texts = {
   tr: {
-    features: "Özellikler",
+    title: "Haber Kaynakları",
     factualTitle: "Doğrulanmış Haberler",
     factualDesc: "Güvenilir kaynaklardan doğrulanmış haberler",
     investTitle: "Yatırım Fırsatları",
@@ -23,7 +23,7 @@ const texts = {
     summaryDesc: "Önemli haberlerin kısa özetleri"
   },
   en: {
-    features: "Features",
+    title: "News Sources",
     factualTitle: "Verified News",
     factualDesc: "Verified news from reliable sources",
     investTitle: "Investment Opportunities",
@@ -124,7 +124,7 @@ export default function NewsSection({ lang }: NewsSectionProps) {
   const isDark = theme === 'dark';
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black">
+    <section className="py-20 bg-cardbg">
       <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"
@@ -134,15 +134,16 @@ export default function NewsSection({ lang }: NewsSectionProps) {
           className="text-center"
         >
           <motion.h2 
-            className="text-4xl font-bold mb-4 text-gray-800 dark:text-white"
+            className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {texts[lang].features}
+            {texts[lang].title}
           </motion.h2>
+
           <motion.p 
-            className="text-lg mb-16 text-gray-600 dark:text-gray-300"
+            className="text-lg mb-16 text-text/80"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -151,7 +152,7 @@ export default function NewsSection({ lang }: NewsSectionProps) {
           </motion.p>
 
           <motion.p 
-            className="text-lg mb-16 text-gray-600 dark:text-gray-300"
+            className="text-lg mb-16 text-text/80"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -175,7 +176,7 @@ export default function NewsSection({ lang }: NewsSectionProps) {
                   transition: { duration: 0.2 }
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="feature-card p-6 rounded-xl bg-white dark:bg-gray-800/50 shadow-lg dark:backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 hover:shadow-xl transition-all duration-300"
+                className="w-full bg-cardbg rounded-xl p-6 border border-border shadow-lg hover:shadow-xl transition-all"
               >
                 <div className="flex flex-col items-center">
                   <motion.div 
@@ -202,7 +203,7 @@ export default function NewsSection({ lang }: NewsSectionProps) {
                     )}
                   </motion.div>
                   <motion.h3 
-                    className="text-xl font-semibold text-gray-800 dark:text-white"
+                    className="text-xl font-bold text-text mb-2"
                     whileHover={{ scale: 1.1 }}
                   >
                     {source.name}

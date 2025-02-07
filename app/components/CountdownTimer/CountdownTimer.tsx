@@ -46,7 +46,7 @@ export default function CountdownTimer({ lang }: CountdownTimerProps) {
   });
 
   useEffect(() => {
-    const targetDate = new Date('2025-02-14T23:59:59');
+    const targetDate = new Date('2025-03-10T23:59:59');
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -74,36 +74,37 @@ export default function CountdownTimer({ lang }: CountdownTimerProps) {
       whileInView="visible"
       viewport={{ once: true }}
       variants={fadeInUp}
-      className="fixed top-0 left-0 right-0 z-50 countdown-section border-b border-gray-800"
+      className="countdown-section"
     >
-      <div className="container mx-auto px-4 py-2">
-        <div className="text-center">
-          <h3 className="text-lg font-bold mb-2 text-white">
-            {texts[lang].alphaAccess}
-          </h3>
-          <div className="flex justify-center items-center gap-6">
-            <div className="text-center">
-              <span className="text-2xl font-bold text-white">{timeLeft.days}</span>
-              <p className="text-xs text-gray-200">{texts[lang].days}</p>
-            </div>
-            <div className="text-xl font-bold text-gray-300">:</div>
-            <div className="text-center">
-              <span className="text-2xl font-bold text-white">{timeLeft.hours}</span>
-              <p className="text-xs text-gray-200">{texts[lang].hours}</p>
-            </div>
-            <div className="text-xl font-bold text-gray-300">:</div>
-            <div className="text-center">
-              <span className="text-2xl font-bold text-white">{timeLeft.minutes}</span>
-              <p className="text-xs text-gray-200">{texts[lang].minutes}</p>
-            </div>
-            <div className="text-xl font-bold text-gray-300">:</div>
-            <div className="text-center">
-              <span className="text-2xl font-bold text-white">{timeLeft.seconds}</span>
-              <p className="text-xs text-gray-200">{texts[lang].seconds}</p>
+      <div className="countdown-content">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h3 className="text-lg font-bold mb-2 text-white/90">
+              {texts[lang].alphaAccess}
+            </h3>
+            <div className="flex justify-center items-center gap-6">
+              <TimeUnit value={timeLeft.days} label={texts[lang].days} />
+              <Separator />
+              <TimeUnit value={timeLeft.hours} label={texts[lang].hours} />
+              <Separator />
+              <TimeUnit value={timeLeft.minutes} label={texts[lang].minutes} />
+              <Separator />
+              <TimeUnit value={timeLeft.seconds} label={texts[lang].seconds} />
             </div>
           </div>
         </div>
       </div>
     </motion.div>
   );
-} 
+}
+
+const TimeUnit = ({ value, label }: { value: number; label: string }) => (
+  <div className="text-center">
+    <span className="text-2xl font-bold text-white">{value}</span>
+    <p className="text-xs text-white/80">{label}</p>
+  </div>
+);
+
+const Separator = () => (
+  <div className="text-xl font-bold text-white/50">:</div>
+); 

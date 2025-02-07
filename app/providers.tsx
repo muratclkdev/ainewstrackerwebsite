@@ -6,10 +6,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="system"
       enableSystem={true}
       disableTransitionOnChange={false}
-      themes={['light', 'dark']}
     >
       {children}
     </ThemeProvider>

@@ -2,45 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global CSS Değişkenleri */
 :root {
-  --background: #000000;
-  --text: #ffffff;
-  --border: #1f2937;
-  --card-bg: rgba(17, 24, 39, 0.8);
-  --hover-bg: rgba(31, 41, 55, 0.8);
-  --header-bg: rgba(0, 0, 0, 0.8);
-  --countdown-from: #1e3a8a;
-  --countdown-to: #581c87;
-  --section-bg: #000000;
-  --section-gradient: linear-gradient(to bottom, #000000, #111827);
-  --logo-filter: invert brightness-0 invert;
-  --logo-invert: 1;
-  --logo-brightness: 0;
-  --button-bg: #1f2937;
-  --button-text: #ffffff;
-  --button-hover: #374151;
+  --background: #ffffff;
+  --text: #1a1a1a;
+  --cardbg: #f8f9fa;
+  --border: #e5e7eb;
+  --primary: #3b82f6;
+  --secondary: #8b5cf6;
+  --buttonbg: #f3f4f6;
+  --buttontext: #4b5563;
+  --buttonhover: #e5e7eb;
 }
 
-[data-theme="light"] {
-  --background: #f8fafc;
-  --text: #1e293b;
-  --border: #e2e8f0;
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --hover-bg: rgba(241, 245, 249, 0.95);
-  --header-bg: rgba(248, 250, 252, 0.9);
-  --countdown-from: #3b82f6;
-  --countdown-to: #8b5cf6;
-  --section-bg: #ffffff;
-  --section-gradient: linear-gradient(to bottom, #ffffff, #f1f5f9);
-  --footer-bg: #f1f5f9;
-  --footer-text: #475569;
-  --footer-link: #3b82f6;
-  --footer-border: #e2e8f0;
-  --logo-invert: 0;
-  --logo-brightness: 0;
-  --button-bg: #ffffff;
-  --button-text: #1e293b;
-  --button-hover: #f8fafc;
+.dark {
+  --background: #0f1117;
+  --text: #e5e7eb;
+  --cardbg: #1a1b26;
+  --border: #2e2e2e;
+  --primary: #60a5fa;
+  --secondary: #a78bfa;
+  --buttonbg: #2d2d2d;
+  --buttontext: #e5e7eb;
+  --buttonhover: #3d3d3d;
 }
 
 body {
@@ -48,1128 +32,143 @@ body {
   color: var(--text);
 }
 
-/* Tema geçişleri için yumuşak animasyon */
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global Geçiş Efektleri */
 *, *::before, *::after {
-  transition: background-color 0.4s ease-in-out, 
-              color 0.3s ease-in-out, 
-              border-color 0.3s ease-in-out,
-              transform 0.3s ease-in-out;
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              transform 0.3s ease;
 }
 
-/* Kartlar için tema desteği */
-.feature-card,
-.about-card,
-.chatgpt-card,
-.team-card,
-.feedback-card {
-  background-color: var(--card-bg);
-  border-color: var(--border);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s ease-in-out;
+/* Container */
+.container {
+  @apply px-4 mx-auto max-w-7xl;
 }
 
-.feature-card:hover,
-.about-card:hover,
-.chatgpt-card:hover,
-.team-card:hover,
-.feedback-card:hover {
-  background-color: var(--hover-bg);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+/* Navbar ve Countdown için özel stiller */
+.navbar {
+  @apply fixed top-[88px] left-0 right-0 z-50 backdrop-blur-sm border-b border-border;
+  background-color: var(--background);
+  opacity: 0.8;
 }
 
-/* Light tema için özel gölgeler ve stiller */
-[data-theme="light"] .feature-card,
-[data-theme="light"] .about-card,
-[data-theme="light"] .chatgpt-card,
-[data-theme="light"] .team-card,
-[data-theme="light"] .feedback-card {
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-  background-color: var(--card-bg);
+.navbar-logo {
+  @apply rounded-lg transition-all duration-300;
+  border-width: 2px;
+}
+
+[data-theme="light"] .navbar-logo {
+  border-color: #1a1a1a;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+
+[data-theme="dark"] .navbar-logo {
+  border-color: #ffffff;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+}
+
+.countdown-section {
+  @apply fixed top-0 left-0 right-0 z-50 border-b border-white/10;
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+  height: 88px; /* Sabit yükseklik */
+}
+
+/* Countdown içeriği için ek stil */
+.countdown-content {
+  @apply h-full flex items-center justify-center;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(147, 51, 234, 0.1) 50%,
+    rgba(59, 130, 246, 0.1) 100%
+  );
+}
+
+/* Card Styles */
+.card {
+  @apply rounded-xl shadow-lg transition-all duration-300;
+  background-color: var(--cardbg);
   border: 1px solid var(--border);
 }
 
-[data-theme="light"] .feature-card:hover,
-[data-theme="light"] .about-card:hover,
-[data-theme="light"] .chatgpt-card:hover,
-[data-theme="light"] .team-card:hover,
-[data-theme="light"] .feedback-card:hover {
-  box-shadow: 0 8px 24px rgba(148, 163, 184, 0.15);
-  border-color: #3b82f6;
+/* Button Styles */
+.btn {
+  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+  background-color: var(--primary);
+  color: var(--buttontext);
 }
 
-/* Footer için tema desteği */
-[data-theme="light"] footer {
-  background-color: var(--footer-bg);
-  border-color: var(--footer-border);
+.btn:hover {
+  background-color: var(--secondary);
 }
 
-[data-theme="light"] footer p {
-  color: var(--footer-text);
-}
-
-[data-theme="light"] footer a {
-  color: var(--footer-text);
-}
-
-[data-theme="light"] footer a:hover {
-  color: var(--footer-link);
-}
-
-/* Özellikler bölümü için tema desteği */
-[data-theme="light"] .feature-icon {
-  color: #3b82f6;
-}
-
-[data-theme="light"] .feature-title {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-[data-theme="light"] .feature-description {
-  color: #475569;
-}
-
-/* Takım bölümü için tema desteği */
-[data-theme="light"] .team-role {
-  color: #475569;
-}
-
-[data-theme="light"] .team-social a {
-  color: #3b82f6;
-}
-
-[data-theme="light"] .team-social a:hover {
-  color: #2563eb;
-}
-
-/* Geri bildirim formu için tema desteği */
-[data-theme="light"] input,
-[data-theme="light"] textarea {
-  background-color: #ffffff;
-  border-color: #e2e8f0;
-  color: #1e293b;
-}
-
-[data-theme="light"] input:focus,
-[data-theme="light"] textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-[data-theme="light"] input::placeholder,
-[data-theme="light"] textarea::placeholder {
-  color: #94a3b8;
-}
-
-/* Hakkımızda bölümü için tema desteği */
-[data-theme="light"] .about-content {
-  color: #475569;
-}
-
-[data-theme="light"] .about-content p {
-  margin-bottom: 1rem;
-}
-
-/* Bölüm başlıkları için tema desteği */
-[data-theme="light"] section h2 {
-  color: #1e293b;
-  font-weight: 700;
-}
-
-[data-theme="light"] section h3 {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-[data-theme="light"] section p.section-description {
-  color: #475569;
-}
-
-/* Haber Kaynakları bölümü için tema desteği */
-[data-theme="light"] .news-sources {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-[data-theme="light"] .news-sources-grid a {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-}
-
-[data-theme="light"] .news-sources-grid a:hover {
-  background: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
-}
-
-[data-theme="light"] .news-sources-grid span {
-  color: #1e293b;
-}
-
-/* Takım kartı için tema desteği */
-[data-theme="light"] .team-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-}
-
-[data-theme="light"] .team-card:hover {
-  background: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
-}
-
-[data-theme="light"] .team-card h3 {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-[data-theme="light"] .team-card p {
-  color: #475569;
-}
-
-[data-theme="light"] .team-social a {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  padding: 8px;
-  border-radius: 8px;
+/* Privacy Card */
+.privacy-card {
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background-color: var(--cardbg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-[data-theme="light"] .team-social a:hover {
-  background: #3b82f6;
-  color: #ffffff;
-  transform: translateY(-2px);
+.privacy-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
 }
 
-/* Geri bildirim formu için tema desteği */
-[data-theme="light"] .feedback-section {
-  background-color: var(--section-bg);
+/* Theme Toggle Button */
+.theme-toggle {
+  @apply relative p-2.5 rounded-xl transition-all duration-300;
+  background-color: var(--buttonbg);
+  color: var(--buttontext);
 }
 
-[data-theme="light"] .feedback-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
-  border: 1px solid #e2e8f0;
-}
-
-[data-theme="light"] .feedback-card input,
-[data-theme="light"] .feedback-card textarea {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  color: #1e293b;
-}
-
-[data-theme="light"] .feedback-card input:focus,
-[data-theme="light"] .feedback-card textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-[data-theme="light"] .feedback-card input::placeholder,
-[data-theme="light"] .feedback-card textarea::placeholder {
-  color: #94a3b8;
-}
-
-[data-theme="light"] .feedback-card button {
-  background: linear-gradient(45deg, #3b82f6, #2563eb);
-  color: #ffffff;
-}
-
-[data-theme="light"] .feedback-card button:hover {
-  background: linear-gradient(45deg, #2563eb, #1d4ed8);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
-
-/* Sosyal medya butonları için tema desteği */
-[data-theme="light"] .social-buttons a {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
-  border: 1px solid #e2e8f0;
-  color: #1e293b;
-}
-
-[data-theme="light"] .social-buttons a:hover {
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-[data-theme="light"] .social-buttons svg {
-  color: #3b82f6;
-}
-
-/* Hakkımızda bölümü için tema desteği */
-[data-theme="light"] .about-section {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-[data-theme="light"] .about-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.9));
-  border: 1px solid #e2e8f0;
-}
-
-[data-theme="light"] .about-card:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-}
-
-[data-theme="light"] .about-card p {
-  color: #475569;
-}
-
-[data-theme="light"] .about-card:hover p {
-  color: #1e293b;
-}
-
-/* Custom Cursor Styles */
-body {
-  cursor: none;
-}
-
-a, button, input, textarea {
-  cursor: none;
-}
-
-.custom-cursor {
-  width: 20px;
-  height: 20px;
-  background: rgba(59, 130, 246, 0.3);
-  border: 2px solid #3b82f6;
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transition: transform 0.2s ease;
-}
-
-.custom-cursor.hover {
-  transform: scale(1.5);
-  background: rgba(139, 92, 246, 0.3);
-  border-color: #8b5cf6;
-}
-
-/* Hide cursor on touch devices */
-@media (hover: none) and (pointer: coarse) {
-  body, a, button, input, textarea {
-    cursor: auto;
-  }
-  .custom-cursor {
-    display: none;
-  }
-}
-
-@layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text;
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .telegram-button {
-    @apply relative flex items-center justify-center gap-2 px-8 py-3 overflow-hidden rounded-lg font-medium transition-all duration-300;
-    background: linear-gradient(45deg, #229ED9, #1e96cf, #1a8bc4);
-    background-size: 200% 200%;
-    animation: gradient 5s ease infinite;
-    box-shadow: 0 0 15px rgba(34, 158, 217, 0.2);
-  }
-
-  .telegram-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(34, 158, 217, 0.4);
-  }
-
-  .telegram-button:active {
-    transform: translateY(1px);
-  }
-
-  .telegram-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      120deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
-    transition: 0.5s;
-  }
-
-  .telegram-button:hover::before {
-    left: 100%;
-  }
-
-  .telegram-icon {
-    @apply transition-transform duration-300;
-  }
-
-  .telegram-button:hover .telegram-icon {
-    transform: scale(1.1) rotate(-5deg);
-  }
-
-  .feature-card {
-    @apply relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border border-gray-800/50;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.05),
-      transparent
-    );
-    transition: 0.5s;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
-  }
-
-  .feature-card:hover::before {
-    left: 100%;
-  }
-
-  .feature-icon {
-    @apply relative w-12 h-12 mb-4 text-blue-400;
-    transition: all 0.3s ease;
-  }
-
-  .feature-card:hover .feature-icon {
-    transform: scale(1.1) rotate(5deg);
-    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
-  }
-
-  .feature-title {
-    @apply text-xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text;
-    transition: all 0.3s ease;
-  }
-
-  .feature-card:hover .feature-title {
-    background-size: 200% 200%;
-    animation: gradient 2s ease infinite;
-  }
-
-  .feature-description {
-    @apply text-gray-400;
-    transition: all 0.3s ease;
-  }
-
-  .feature-card:hover .feature-description {
-    color: rgba(156, 163, 175, 1);
-  }
-
-  .glow-effect {
-    position: relative;
-  }
-
-  .glow-effect::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-    filter: blur(15px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-    border-radius: inherit;
-  }
-
-  .feature-card:hover .glow-effect::after {
-    opacity: 0.15;
-  }
-
-  @keyframes float-icon {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-5px);
-    }
-  }
-
-  .floating-icon {
-    animation: float-icon 3s ease-in-out infinite;
-  }
-
-  .about-card {
-    @apply relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .about-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.05),
-      transparent
-    );
-    transition: 0.5s;
-  }
-
-  .about-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
-  }
-
-  .about-card:hover::before {
-    left: 100%;
-  }
-
-  .about-paragraph {
-    @apply text-gray-300 mb-6 last:mb-0;
-    transition: all 0.3s ease;
-  }
-
-  .about-card:hover .about-paragraph {
-    color: rgba(209, 213, 219, 1);
-  }
-
-  .about-glow {
-    position: relative;
-  }
-
-  .about-glow::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-    filter: blur(15px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-    border-radius: inherit;
-  }
-
-  .about-card:hover .about-glow::after {
-    opacity: 0.15;
-  }
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px) rotate(-45deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(-45deg);
-  }
-  100% {
-    transform: translateY(0px) rotate(-45deg);
-  }
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Section Styles */
-.section-gradient {
-  @apply bg-gradient-to-b from-gray-900 via-gray-800 to-black;
+.theme-toggle:hover {
+  background-color: var(--buttonhover);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background-color: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  background-color: var(--buttonbg);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background-color: var(--buttonhover);
 }
 
-/* Smooth Transitions */
-* {
-  @apply transition-colors duration-200;
+/* Dil Seçim Butonları */
+.lang-button {
+  @apply px-3 py-2 rounded-lg font-medium transition-all duration-300;
+  background-color: var(--buttonbg);
+  color: var(--buttontext);
+  border: 2px solid transparent;
 }
 
-/* Card Hover Effect */
-.hover-card {
-  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
+.lang-button:hover {
+  background-color: var(--buttonhover);
 }
 
-/* Modern Mockup Styles */
-.mockup-container {
-  perspective: 1500px;
-  transform-style: preserve-3d;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-.iphone-mockup {
-  position: relative;
-  width: 300px;
-  height: 600px;
-  background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-  border-radius: 40px;
-  padding: 8px;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(59, 130, 246, 0.2),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
-  transform: 
-    perspective(1000px) 
-    rotateY(-15deg) 
-    rotateX(5deg);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: float 6s ease-in-out infinite;
-  position: relative;
-}
-
-.iphone-mockup::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 40px;
-  background: linear-gradient(
-    45deg,
-    rgba(59, 130, 246, 0.1),
-    rgba(139, 92, 246, 0.1)
-  );
-  z-index: -1;
-  filter: blur(20px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.iphone-mockup::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 42px;
-  background: linear-gradient(
-    45deg,
-    rgba(59, 130, 246, 0.5),
-    rgba(139, 92, 246, 0.5)
-  );
-  z-index: -2;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.iphone-mockup:hover {
-  transform: 
-    perspective(1000px) 
-    rotateY(-5deg) 
-    rotateX(2deg) 
-    scale(1.05);
-  box-shadow: 
-    0 35px 60px -15px rgba(0, 0, 0, 0.6),
-    0 0 40px rgba(59, 130, 246, 0.3);
-}
-
-.iphone-mockup:hover::before,
-.iphone-mockup:hover::after {
-  opacity: 1;
-}
-
-.iphone-mockup img {
-  border-radius: 32px;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.iphone-mockup:hover img {
-  transform: scale(1.02);
-}
-
-/* Notch tasarımı */
-.iphone-mockup::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 25px;
-  background: #000;
-  border-radius: 20px;
-  z-index: 2;
-}
-
-/* Dynamic Island tasarımı */
-.dynamic-island {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 25px;
-  background: #000;
-  border-radius: 20px;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.dynamic-island::after {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.2;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-}
-
-@keyframes float {
-  0% {
-    transform: 
-      perspective(1000px) 
-      rotateY(-15deg) 
-      rotateX(5deg) 
-      translateY(0);
-  }
-  50% {
-    transform: 
-      perspective(1000px) 
-      rotateY(-12deg) 
-      rotateX(3deg) 
-      translateY(-20px);
-  }
-  100% {
-    transform: 
-      perspective(1000px) 
-      rotateY(-15deg) 
-      rotateX(5deg) 
-      translateY(0);
-  }
-}
-
-/* Işık efekti */
-.light-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  border-radius: 32px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.iphone-mockup:hover .light-effect {
-  opacity: 1;
-}
-
-/* Responsive tasarım */
-@media (max-width: 768px) {
-  .iphone-mockup {
-    width: 250px;
-    height: 500px;
-    transform: none;
-    animation: floatMobile 4s ease-in-out infinite;
-  }
-
-  .iphone-mockup:hover {
-    transform: scale(1.05);
-  }
-
-  @keyframes floatMobile {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-}
-
-/* Header ve Countdown için tema desteği */
-header {
-  background-color: var(--header-bg) !important;
-  backdrop-filter: blur(8px);
-}
-
-.countdown-section {
-  background: linear-gradient(to right, var(--countdown-from), var(--countdown-to)) !important;
-}
-
-/* Theme Toggle Switch */
-.theme-switch {
-  @apply relative w-16 h-8 rounded-full p-1;
-  background: #1e293b;
-  border: 2px solid #334155;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-[data-theme="light"] .theme-switch {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
-}
-
-.theme-switch:hover {
-  border-color: #3b82f6;
-}
-
-.theme-switch .theme-icons {
-  @apply absolute inset-0 w-full h-full flex items-center justify-between px-2;
-  z-index: 1;
-}
-
-.theme-switch .theme-icons svg {
-  @apply w-4 h-4;
-  color: #94a3b8;
-}
-
-.theme-switch[data-theme="dark"] .theme-icons svg:first-child {
-  color: #312e81;
-}
-
-.theme-switch[data-theme="light"] .theme-icons svg:last-child {
-  color: #fbbf24;
-}
-
-.theme-switch .switch-handle {
-  @apply absolute w-6 h-6 rounded-full flex items-center justify-center;
-  background: #60a5fa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 2;
-  left: 2px;
-}
-
-.theme-switch[data-theme="dark"] .switch-handle {
-  transform: translateX(0);
-  background: #312e81;
-}
-
-.theme-switch[data-theme="light"] .switch-handle {
-  transform: translateX(32px);
-  background: #fbbf24;
-}
-
-.theme-switch .switch-icon {
-  @apply w-4 h-4 text-white;
-  transition: all 0.3s ease;
-}
-
-.theme-switch:hover .switch-icon {
-  transform: rotate(360deg);
-}
-
-/* Section'lar için tema desteği */
-.bg-gradient-to-b {
-  background: var(--section-gradient) !important;
-}
-
-section {
-  background-color: var(--section-bg);
-}
-
-/* Light tema için özel stiller */
-[data-theme="light"] section {
-  color: var(--text);
-  background: var(--section-bg);
-}
-
-[data-theme="light"] .bg-gradient-to-b {
-  background: var(--section-gradient) !important;
-}
-
-[data-theme="light"] .bg-gradient-to-b.from-black,
-[data-theme="light"] .bg-gradient-to-b.from-gray-900,
-[data-theme="light"] .bg-gradient-to-b.to-black,
-[data-theme="light"] .bg-gradient-to-b.to-gray-900,
-[data-theme="light"] .bg-gradient-to-b.via-gray-800 {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc) !important;
-}
-
-[data-theme="light"] .section-gradient {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-/* Haber Kaynakları bölümü için tema desteği */
-[data-theme="light"] .news-sources {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-/* Hakkımızda bölümü için tema desteği */
-[data-theme="light"] .about-section {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-}
-
-[data-theme="light"] .feature-card,
-[data-theme="light"] .about-card,
-[data-theme="light"] .chatgpt-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
-[data-theme="light"] .feature-icon svg {
-  stroke: var(--text);
-}
-
-[data-theme="light"] .feature-title,
-[data-theme="light"] .about-title,
-[data-theme="light"] h2,
-[data-theme="light"] h3 {
-  color: var(--text);
-}
-
-[data-theme="light"] .feature-description,
-[data-theme="light"] .about-description,
-[data-theme="light"] p {
-  color: #475569;
-}
-
-/* Logo ve resimler için tema desteği */
-[data-theme="light"] img,
-[data-theme="light"] Image {
-  filter: var(--logo-filter);
-}
-
-/* News source logos için özel stil */
-.news-source-logo {
-  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
-  transition: all 0.3s ease;
-}
-
-/* Özellikler kartları için tema desteği */
-[data-theme="light"] .feature-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-}
-
-[data-theme="light"] .feature-card:hover {
-  background: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
-}
-
-[data-theme="light"] .feature-icon {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 12px;
-  padding: 12px;
-}
-
-[data-theme="light"] .feature-title {
-  color: #1e293b;
-  font-weight: 600;
-  margin-top: 1rem;
-}
-
-[data-theme="light"] .feature-description {
-  color: #475569;
-  margin-top: 0.5rem;
-}
-
-/* Takım kartı için tema desteği */
-[data-theme="light"] .team-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-}
-
-[data-theme="light"] .team-card:hover {
-  background: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
-}
-
-[data-theme="light"] .team-card h3 {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-[data-theme="light"] .team-card p {
-  color: #475569;
-}
-
-[data-theme="light"] .team-social a {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-[data-theme="light"] .team-social a:hover {
-  background: #3b82f6;
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
-/* Glow efekti için güncelleme */
-[data-theme="light"] .glow-effect::after {
-  background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
-  opacity: 0;
-}
-
-[data-theme="light"] .glow-effect:hover::after {
-  opacity: 1;
-}
-
-/* Kartların arka plan renkleri */
-[data-theme="light"] .bg-gradient-to-br.from-gray-800.to-gray-900 {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0;
-}
-
-/* Navbar logo için özel stil */
-.navbar-logo {
-  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
-  transition: all 0.3s ease;
-}
-
-[data-theme="light"] .navbar-logo {
-  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.8));
-}
-
-/* News source logos için özel stil */
-.news-source-logo {
-  filter: invert(var(--logo-invert)) brightness(var(--logo-brightness)) invert(var(--logo-invert));
-  transition: all 0.3s ease;
-}
-
-[data-theme="light"] .news-source-logo {
-  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.8));
-}
-
-/* Dil seçenekleri butonları için tema desteği */
-header button {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-}
-
-header button:hover {
-  background-color: var(--button-hover);
-  border-color: #3b82f6;
-}
-
-/* Aktif dil butonu için stil */
-header button.active {
-  background-color: #3b82f6;
-  color: #ffffff;
-  border-color: #3b82f6;
-}
-
-[data-theme="light"] header button.active {
-  background-color: #3b82f6;
-  color: #ffffff;
-  border-color: #3b82f6;
-}
-
-/* Haber Kaynakları kartları için özel stil */
-.news-source-card {
-  @apply flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300;
-  background-color: #FFFFFF;
-}
-
-.dark .news-source-card {
-  background-color: #18181B;
-}
-
-/* ------------------------------------------
-   Privacy Page Card Stilleri
-------------------------------------------- */
-.privacy-card {
-  @apply p-8 rounded-2xl transition-all duration-300;
-}
-
-[data-theme="light"] .privacy-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-}
-
-[data-theme="light"] .privacy-card:hover {
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px);
-}
-
-[data-theme="dark"] .privacy-card {
-  background-color: rgba(31, 41, 55, 0.5);
-  border: 1px solid rgba(55, 65, 81, 0.5);
-  /* Dark modda bulanıklık efekti eklemek için */
-  backdrop-filter: blur(8px);
-}
-
-[data-theme="dark"] .privacy-card:hover {
-  transform: translateY(-5px);
+.lang-button.active {
+  border-color: var(--primary);
+  background-color: var(--buttonhover);
+  color: var(--primary);
+  font-weight: bold;
 }

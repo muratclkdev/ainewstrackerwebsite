@@ -10,15 +10,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        text: 'var(--text)',
+        background: 'var(--background)',
+        border: 'var(--border)',
+        cardbg: 'var(--card-bg)',
+        hoverbg: 'var(--hover-bg)',
+        headerbg: 'var(--header-bg)',
+        buttonbg: 'var(--button-bg)',
+        buttontext: 'var(--button-text)',
+        buttonhover: 'var(--button-hover)',
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
-    },
+      // ... diğer extend ayarları ...
+    }
   },
   plugins: [],
 };

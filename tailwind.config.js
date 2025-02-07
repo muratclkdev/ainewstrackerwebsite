@@ -8,6 +8,17 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        background: 'var(--background)',
+        text: 'var(--text)',
+        cardbg: 'var(--cardbg)',
+        border: 'var(--border)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        buttonbg: 'var(--buttonbg)',
+        buttontext: 'var(--buttontext)',
+        buttonhover: 'var(--buttonhover)',
+      },
       container: {
         center: true,
         padding: "1rem",
