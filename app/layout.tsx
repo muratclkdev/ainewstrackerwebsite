@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
+import GoogleAdsense from "./components/analytics/GoogleAdsense";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
       <head>
         <Suspense fallback={null}>
           <YandexMetrica />
+          <GoogleAdsense />
         </Suspense>
       </head>
       <body className="bg-background" suppressHydrationWarning={true}>
