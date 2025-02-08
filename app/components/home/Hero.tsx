@@ -56,12 +56,21 @@ export const Hero = ({ lang }: HeroProps) => {
       const data = await res.json();
       if (res.ok && data.success) {
         const telegramLink = data.inviteLink;
-        window.open(telegramLink, '_blank', 'noopener,noreferrer');
+        // Mobil cihaz kontrolü
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          // Mobil cihazlar için doğrudan yönlendirme
+          window.location.href = telegramLink;
+        } else {
+          // Masaüstü için yeni sekmede açma
+          window.open(telegramLink, '_blank', 'noopener,noreferrer');
+        }
       } else {
-        alert('Davet linki alınamadı: ' + (data.error || 'Bilinmeyen hata'));
+        alert(lang === 'tr' ? 'Davet linki alınamadı: ' + (data.error || 'Bilinmeyen hata') : 'Could not get invite link: ' + (data.error || 'Unknown error'));
       }
     } catch (error: any) {
-      alert('Hata oluştu: ' + error.message);
+      alert(lang === 'tr' ? 'Hata oluştu: ' + error.message : 'Error occurred: ' + error.message);
     }
     setLoading(false);
     setShowTelegramModal(false);
