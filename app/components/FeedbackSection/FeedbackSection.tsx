@@ -70,42 +70,52 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   useEffect(() => {
     emailjs.init(PUBLIC_KEY);
 
-    // Debug: Turnstile site key'i kontrol et
-    console.log('Turnstile Site Key:', process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+    // Script daha önce yüklendiyse tekrar yükleme
+    if (document.querySelector('script[src*="turnstile"]')) {
+      if (turnstileRef.current && window.turnstile) {
+        try {
+          window.turnstile.render(turnstileRef.current, {
+            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+            callback: (token: string) => setTurnstileToken(token),
+            theme: theme === 'dark' ? 'dark' : 'light',
+            'refresh-expired': 'auto'
+          });
+        } catch (error) {
+          console.error('Turnstile render hatası:', error);
+        }
+      }
+      return;
+    }
 
-    // Turnstile script'ini yükle
+    // İlk kez script yükleme
     const script = document.createElement('script');
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback";
     script.async = true;
     script.defer = true;
 
-    // Turnstile yüklendiğinde çağrılacak callback
     window.onloadTurnstileCallback = () => {
-      console.log('Turnstile script yüklendi');
       if (turnstileRef.current && window.turnstile) {
         try {
           window.turnstile.render(turnstileRef.current, {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-            callback: (token: string) => {
-              console.log('Turnstile token alındı:', token);
-              setTurnstileToken(token);
-            },
+            callback: (token: string) => setTurnstileToken(token),
             theme: theme === 'dark' ? 'dark' : 'light',
             'refresh-expired': 'auto'
           });
-          console.log('Turnstile widget başarıyla render edildi');
         } catch (error) {
           console.error('Turnstile render hatası:', error);
         }
-      } else {
-        console.error('turnstileRef veya window.turnstile bulunamadı');
       }
     };
 
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      // Component unmount olduğunda script'i kaldır
+      const existingScript = document.querySelector('script[src*="turnstile"]');
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript);
+      }
       delete window.onloadTurnstileCallback;
     };
   }, [theme]);
@@ -118,7 +128,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form gönderiliyor...');
-    console.log('Turnstile token:', turnstileToken);
+    console.log('Form verileri:', { name, email, message });
 
     if (!turnstileToken) {
       console.log('Turnstile doğrulaması eksik');
@@ -127,25 +137,13 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
     }
 
     try {
-      console.log('Turnstile doğrulaması başlatılıyor...');
-      const verifyResponse = await fetch('/api/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: turnstileToken }),
+      // EmailJS ile form gönderimi
+      console.log('EmailJS\'e gönderilecek veriler:', {
+        from_name: name,
+        from_email: email,
+        message: message,
       });
 
-      const verifyData = await verifyResponse.json();
-      console.log('Turnstile doğrulama sonucu:', verifyData);
-
-      if (!verifyData.success) {
-        console.error('Turnstile doğrulama hatası:', verifyData);
-        setError(texts[lang].verificationError);
-        return;
-      }
-
-      // EmailJS ile form gönderimi
       const result = await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
@@ -158,9 +156,16 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
       );
 
       if (result.status === 200) {
+        console.log('Form başarıyla gönderildi');
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
+        // Form alanlarını temizle
+        setName('');
+        setEmail('');
+        setMessage('');
+        setError('');
         formRef.current?.reset();
+        
         // Turnstile widget'ını sıfırla
         if (window.turnstile) {
           window.turnstile.reset();
@@ -196,6 +201,8 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 name="from_name"
                 placeholder={texts[lang].feedbackName}
                 required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
@@ -205,6 +212,8 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 name="from_email"
                 placeholder={texts[lang].feedbackEmail}
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
@@ -213,6 +222,8 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 name="message"
                 placeholder={texts[lang].feedbackMessage}
                 required
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 rows={5}
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
