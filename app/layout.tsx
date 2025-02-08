@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "AI News Tracker",
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
-        <YandexMetrica />
+        <Suspense fallback={null}>
+          <YandexMetrica />
+        </Suspense>
       </head>
       <body className="bg-background" suppressHydrationWarning={true}>
         <CountdownTimer lang="tr" />

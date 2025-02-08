@@ -1,19 +1,18 @@
 "use client";
 
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export const YandexMetrica = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).ym) {
       // Sayfa görüntüleme olayını gönder
-      (window as any).ym(99681044, 'hit', window.location.href);
+      (window as any).ym(99681044, 'hit', window.location.pathname);
     }
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return (
     <>
