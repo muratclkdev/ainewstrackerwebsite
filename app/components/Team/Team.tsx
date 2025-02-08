@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import type { Lang } from '../../types';
 import { GithubIcon, CoffeeIcon, CopyIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
 interface TeamProps {
@@ -41,10 +41,14 @@ const fadeInUp = {
 };
 
 export default function Team({ lang }: TeamProps) {
+  const [mounted, setMounted] = useState(false);
   const [showBinanceModal, setShowBinanceModal] = useState(false);
-  const binanceId = "40173249";
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const binanceId = "40173249";
+
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(binanceId);

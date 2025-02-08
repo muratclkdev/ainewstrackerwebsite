@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../../constants';
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lang } from '../../types';
 import { useTheme } from 'next-themes';
 
@@ -33,11 +33,16 @@ const texts = {
 };
 
 export const Hero = ({ lang }: HeroProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const [showTelegramModal, setShowTelegramModal] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  if (!mounted) return null;
 
   const handleTelegramClick = () => {
     setFeedbackMessage(texts[lang].feedback);
@@ -93,7 +98,7 @@ export const Hero = ({ lang }: HeroProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex items-center justify-center gap-4"
+              className="flex items-center justify-center md:justify-start gap-4"
             >
               <button
                 onClick={handleTelegramClick}

@@ -6,6 +6,17 @@ import emailjs from '@emailjs/browser';
 import type { Lang } from '../../types';
 import { useTheme } from 'next-themes';
 
+// Turnstile için tip tanımlaması
+declare global {
+  interface Window {
+    turnstile?: {
+      reset: () => void;
+      render: (container: string | HTMLElement, options: any) => void;
+    };
+    onloadTurnstileCallback?: () => void;
+  }
+}
+
 interface FeedbackSectionProps {
   lang: Lang;
 }
@@ -18,7 +29,9 @@ const texts = {
     feedbackEmail: "E-posta",
     feedbackMessage: "Mesaj",
     feedbackSubmit: "Gönder",
-    feedbackSuccess: "Geri bildiriminiz için teşekkürler!"
+    feedbackSuccess: "Geri bildiriminiz için teşekkürler!",
+    invalidEmail: "Lütfen geçerli bir e-posta adresi giriniz (@gmail.com, @outlook.com, @hotmail.com, @yahoo.com)",
+    verificationError: "Lütfen doğrulamayı tamamlayın"
   },
   en: {
     feedback: "Feedback",
@@ -27,53 +40,118 @@ const texts = {
     feedbackEmail: "Email",
     feedbackMessage: "Message",
     feedbackSubmit: "Submit",
-    feedbackSuccess: "Thank you for your feedback!"
+    feedbackSuccess: "Thank you for your feedback!",
+    invalidEmail: "Please enter a valid email address (@gmail.com, @outlook.com, @hotmail.com, @yahoo.com)",
+    verificationError: "Please complete the verification"
   }
 };
 
+const ALLOWED_EMAIL_DOMAINS = [
+  'gmail.com',
+  'outlook.com',
+  'hotmail.com',
+  'yahoo.com'
+];
+
 export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { theme } = useTheme();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const PUBLIC_KEY = "RuTlqyGrtfjYDeqgt";
 
   useEffect(() => {
     emailjs.init(PUBLIC_KEY);
-  }, []);
+
+    // Turnstile script'ini yükle
+    const script = document.createElement('script');
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback";
+    script.async = true;
+    script.defer = true;
+
+    // Turnstile yüklendiğinde çağrılacak callback
+    window.onloadTurnstileCallback = () => {
+      if (turnstileRef.current && window.turnstile) {
+        window.turnstile.render(turnstileRef.current, {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            setTurnstileToken(token);
+          },
+          theme: theme === 'dark' ? 'dark' : 'light'
+        });
+      }
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+      delete window.onloadTurnstileCallback;
+    };
+  }, [theme]);
+
+  const validateEmail = (email: string) => {
+    const domain = email.split('@')[1]?.toLowerCase();
+    return ALLOWED_EMAIL_DOMAINS.includes(domain);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    
-    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 
-        !process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID) {
-      setError('EmailJS yapılandırması eksik. Lütfen sistem yöneticisi ile iletişime geçin.');
+
+    if (!turnstileToken) {
+      setError(texts[lang].verificationError);
       return;
     }
 
-    if (formRef.current) {
-      try {
-        const result = await emailjs.sendForm(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-          formRef.current,
-          PUBLIC_KEY
-        );
+    try {
+      // Turnstile token'ını doğrula
+      const verifyResponse = await fetch('/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
 
-        if (result.status === 200) {
-          setShowSuccess(true);
-          setTimeout(() => setShowSuccess(false), 3000);
-          formRef.current.reset();
-        } else {
-          throw new Error(`EmailJS yanıt kodu: ${result.status}`);
-        }
-      } catch (error: any) {
-        console.error('EmailJS Error:', error);
-        const errorMessage = error?.message || error?.text || 'Bilinmeyen bir hata oluştu';
-        setError(`Mesaj gönderilirken bir hata oluştu: ${errorMessage}. Lütfen daha sonra tekrar deneyin.`);
+      const verifyData = await verifyResponse.json();
+
+      if (!verifyData.success) {
+        setError(texts[lang].verificationError);
+        return;
       }
+
+      // EmailJS ile form gönderimi
+      const result = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          from_name: name,
+          from_email: email,
+          message: message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      );
+
+      if (result.status === 200) {
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+        formRef.current?.reset();
+        // Turnstile widget'ını sıfırla
+        if (window.turnstile) {
+          window.turnstile.reset();
+        }
+        setTurnstileToken(null);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setError('Bilinmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
     }
   };
 
@@ -97,7 +175,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
             <div>
               <input
                 type="text"
-                name="name"
+                name="from_name"
                 placeholder={texts[lang].feedbackName}
                 required
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
@@ -106,7 +184,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
             <div>
               <input
                 type="email"
-                name="email"
+                name="from_email"
                 placeholder={texts[lang].feedbackEmail}
                 required
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
@@ -121,9 +199,12 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
                 className="w-full bg-cardbg text-text border border-border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-buttonbg"
               />
             </div>
+            <div className="flex justify-center mb-4">
+              <div ref={turnstileRef}></div>
+            </div>
             <button
               type="submit"
-              className="px-6 py-2 bg-buttonbg text-buttontext rounded-lg font-medium hover:bg-buttonhover transition-all"
+              className="w-full px-8 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-[1.02]"
             >
               {texts[lang].feedbackSubmit}
             </button>

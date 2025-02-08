@@ -59,17 +59,14 @@ html {
 
 .navbar-logo {
   @apply rounded-lg transition-all duration-300;
-  border-width: 2px;
 }
 
 [data-theme="light"] .navbar-logo {
-  border-color: #1a1a1a;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+  filter: brightness(0);
 }
 
 [data-theme="dark"] .navbar-logo {
-  border-color: #ffffff;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  filter: brightness(0) invert(1);
 }
 
 .navbar.hidden {

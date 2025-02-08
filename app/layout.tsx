@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <head />
-      <body className="bg-background">
+      <body className="bg-background" suppressHydrationWarning={true}>
         <CountdownTimer lang="tr" />
         <Providers>
           {children}

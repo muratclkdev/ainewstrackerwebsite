@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TypewriterText } from '../TypewriterText';
@@ -35,28 +36,30 @@ const texts = {
 };
 
 export default function Header({ lang, theme, onThemeChange, onLanguageChange }: HeaderProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  const effectiveTheme = (mounted ? (resolvedTheme || "dark") : "dark") as Theme;
+
   return (
-    <header className="navbar">
+    <header className={`navbar ${effectiveTheme === 'dark' ? 'text-white' : 'text-black'}`} data-theme={effectiveTheme}>
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-4">
           <Image
-            src="/images/logo.png"
+            src={effectiveTheme === 'light' ? "/images/logo-black.png" : "/images/logo-white.png"}
             alt="AI News Tracker Logo"
             width={70}
             height={70}
-            className={`navbar-logo ${
-              theme === 'dark'
-                ? 'filter brightness-0 invert'
-                : 'filter brightness-0 contrast-200'
-            }`}
+            className="navbar-logo"
+            priority
           />
-          <div className="hidden md:block text-lg font-bold text-text">
+          <div className="hidden md:block text-lg font-bold">
             <TypewriterText />
           </div>
         </Link>
         <div className="flex gap-4">
           <ThemeSwitch
-            theme={theme}
+            theme={effectiveTheme}
             lang={lang}
             onThemeChange={onThemeChange}
           />

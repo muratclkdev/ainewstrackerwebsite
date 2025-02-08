@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import type { Lang } from '../../types';
 import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
 
 interface AboutSectionProps {
   lang: Lang;
@@ -31,7 +32,11 @@ const texts = {
 };
 
 export default function AboutSection({ lang }: AboutSectionProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const { theme } = useTheme();
+  if (!mounted) return null;
   const isDark = theme === 'dark';
 
   return (
