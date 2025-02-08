@@ -3,12 +3,18 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
-import GoogleAdsense from "./components/analytics/GoogleAdsense";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "AI News Tracker",
   description: "AI News Tracker - Yapay Zeka Haberleri",
+  metadataBase: new URL('https://ainewstracker.com'),
+  alternates: {
+    canonical: '/',
+  },
+  verification: {
+    google: "ca-pub-2763920619272344",
+  }
 };
 
 export default function RootLayout({
@@ -19,9 +25,9 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-2763920619272344" />
         <Suspense fallback={null}>
           <YandexMetrica />
-          <GoogleAdsense />
         </Suspense>
       </head>
       <body className="bg-background" suppressHydrationWarning={true}>
