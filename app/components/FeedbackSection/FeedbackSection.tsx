@@ -70,6 +70,9 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   useEffect(() => {
     emailjs.init(PUBLIC_KEY);
 
+    // Debug: Turnstile site key'i kontrol et
+    console.log('Turnstile Site Key:', process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
     // Turnstile script'ini yükle
     const script = document.createElement('script');
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback";
@@ -78,14 +81,24 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
 
     // Turnstile yüklendiğinde çağrılacak callback
     window.onloadTurnstileCallback = () => {
+      console.log('Turnstile script yüklendi');
       if (turnstileRef.current && window.turnstile) {
-        window.turnstile.render(turnstileRef.current, {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-          callback: (token: string) => {
-            setTurnstileToken(token);
-          },
-          theme: theme === 'dark' ? 'dark' : 'light'
-        });
+        try {
+          window.turnstile.render(turnstileRef.current, {
+            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+            callback: (token: string) => {
+              console.log('Turnstile token alındı:', token);
+              setTurnstileToken(token);
+            },
+            theme: theme === 'dark' ? 'dark' : 'light',
+            'refresh-expired': 'auto'
+          });
+          console.log('Turnstile widget başarıyla render edildi');
+        } catch (error) {
+          console.error('Turnstile render hatası:', error);
+        }
+      } else {
+        console.error('turnstileRef veya window.turnstile bulunamadı');
       }
     };
 
@@ -104,14 +117,17 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form gönderiliyor...');
+    console.log('Turnstile token:', turnstileToken);
 
     if (!turnstileToken) {
+      console.log('Turnstile doğrulaması eksik');
       setError(texts[lang].verificationError);
       return;
     }
 
     try {
-      // Turnstile token'ını doğrula
+      console.log('Turnstile doğrulaması başlatılıyor...');
       const verifyResponse = await fetch('/api/verify', {
         method: 'POST',
         headers: {
@@ -121,8 +137,10 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
       });
 
       const verifyData = await verifyResponse.json();
+      console.log('Turnstile doğrulama sonucu:', verifyData);
 
       if (!verifyData.success) {
+        console.error('Turnstile doğrulama hatası:', verifyData);
         setError(texts[lang].verificationError);
         return;
       }
@@ -150,7 +168,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
         setTurnstileToken(null);
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('Form gönderim hatası:', error);
       setError('Bilinmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
     }
   };
