@@ -11,7 +11,8 @@ declare global {
   interface Window {
     turnstile?: {
       reset: () => void;
-      render: (container: string | HTMLElement, options: any) => void;
+      render: (container: string | HTMLElement, options: any) => string;
+      remove: (widgetId: string) => void;
     };
     onloadTurnstileCallback?: () => void;
   }
@@ -70,11 +71,17 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
   useEffect(() => {
     emailjs.init(PUBLIC_KEY);
 
-    // Script daha önce yüklendiyse tekrar yükleme
+    let widgetId: string | undefined;
+
+    // Script daha önce yüklendiyse sadece tema güncelle
     if (document.querySelector('script[src*="turnstile"]')) {
       if (turnstileRef.current && window.turnstile) {
+        // Eğer önceki widget varsa temizle
+        if (widgetId) {
+          window.turnstile.remove(widgetId);
+        }
         try {
-          window.turnstile.render(turnstileRef.current, {
+          widgetId = window.turnstile.render(turnstileRef.current, {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
             callback: (token: string) => setTurnstileToken(token),
             theme: theme === 'dark' ? 'dark' : 'light',
@@ -84,7 +91,11 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
           console.error('Turnstile render hatası:', error);
         }
       }
-      return;
+      return () => {
+        if (widgetId && window.turnstile) {
+          window.turnstile.remove(widgetId);
+        }
+      };
     }
 
     // İlk kez script yükleme
@@ -96,7 +107,7 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
     window.onloadTurnstileCallback = () => {
       if (turnstileRef.current && window.turnstile) {
         try {
-          window.turnstile.render(turnstileRef.current, {
+          widgetId = window.turnstile.render(turnstileRef.current, {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
             callback: (token: string) => setTurnstileToken(token),
             theme: theme === 'dark' ? 'dark' : 'light',
@@ -111,7 +122,9 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
     document.head.appendChild(script);
 
     return () => {
-      // Component unmount olduğunda script'i kaldır
+      if (widgetId && window.turnstile) {
+        window.turnstile.remove(widgetId);
+      }
       const existingScript = document.querySelector('script[src*="turnstile"]');
       if (existingScript && existingScript.parentNode) {
         existingScript.parentNode.removeChild(existingScript);
@@ -127,44 +140,44 @@ export default function FeedbackSection({ lang }: FeedbackSectionProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form gönderiliyor...');
-    console.log('Form verileri:', { name, email, message });
+
+    // E-posta doğrulaması
+    if (!validateEmail(email)) {
+      setError(texts[lang].invalidEmail);
+      return;
+    }
 
     if (!turnstileToken) {
-      console.log('Turnstile doğrulaması eksik');
       setError(texts[lang].verificationError);
       return;
     }
 
     try {
       // EmailJS ile form gönderimi
-      console.log('EmailJS\'e gönderilecek veriler:', {
+      const templateParams = {
         from_name: name,
         from_email: email,
         message: message,
-      });
+        to_name: "AI News Tracker",
+        reply_to: email
+      };
 
       const result = await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        {
-          from_name: name,
-          from_email: email,
-          message: message,
-        },
+        templateParams,
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
       );
 
       if (result.status === 200) {
-        console.log('Form başarıyla gönderildi');
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
+        
         // Form alanlarını temizle
         setName('');
         setEmail('');
         setMessage('');
         setError('');
-        formRef.current?.reset();
         
         // Turnstile widget'ını sıfırla
         if (window.turnstile) {
