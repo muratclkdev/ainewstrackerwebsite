@@ -45,6 +45,11 @@ export const Hero = ({ lang }: HeroProps) => {
   if (!mounted) return null;
 
   const handleTelegramClick = () => {
+    // Yandex Metrika olay izleme
+    if (typeof window !== 'undefined' && (window as any).ym) {
+      (window as any).ym(99681044, 'reachGoal', 'telegram_button_click');
+    }
+    
     setFeedbackMessage(texts[lang].feedback);
     setTimeout(() => setShowTelegramModal(true), 1000);
   };

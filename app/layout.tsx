@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
+import YandexMetrica from "./components/analytics/YandexMetrica";
 
 export const metadata: Metadata = {
   title: "AI News Tracker",
@@ -15,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" suppressHydrationWarning>
-      <head />
+      <head>
+        <YandexMetrica />
+      </head>
       <body className="bg-background" suppressHydrationWarning={true}>
         <CountdownTimer lang="tr" />
         <Providers>
