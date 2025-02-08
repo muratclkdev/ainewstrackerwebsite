@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
+
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default function RootLayout({
         <CountdownTimer lang="tr" />
         <Providers>
           {children}
+
         </Providers>
       </body>
     </html>

@@ -9,18 +9,14 @@ interface FooterProps {
 
 const texts = {
   tr: {
+    sponsorship: "Sponsorluk ve işbirliği için:",
     rights: "Tüm hakları saklıdır",
-    privacy: "Gizlilik Politikası",
-    team: "Takım",
-    role: "Kurucu & Geliştirici",
-    founder: "Murat Çelik"
+    privacy: "Gizlilik Politikası"
   },
   en: {
+    sponsorship: "For sponsorship and communication:",
     rights: "All rights reserved",
-    privacy: "Privacy Policy",
-    team: "Team",
-    role: "Founder & Developer",
-    founder: "Murat Celik"
+    privacy: "Privacy Policy"
   }
 };
 
@@ -33,6 +29,15 @@ export default function Footer({ lang }: FooterProps) {
             © 2025 AI News Tracker. {texts[lang].rights}
           </div>
           <div className="flex gap-4">
+            <span className="text-gray-400">{texts[lang].sponsorship}</span>
+            <a 
+              href="mailto:iletisim@ainewstracker.xyz" 
+              className="text-gray-400 hover:text-white transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              iletisim@ainewstracker.xyz
+            </a>
             <Link
               href="/privacy"
               className="text-gray-400 hover:text-white transition-colors"
