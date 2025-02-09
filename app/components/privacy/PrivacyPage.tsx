@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../../constants';
 import { CustomCursor } from '../../components/CustomCursor';
@@ -71,7 +70,6 @@ export const PrivacyPage = ({ lang, content }: PrivacyPageProps) => {
         </motion.div>
       </main>
 
-      <Footer lang={currentLang} />
       <CookieConsent lang={currentLang} />
     </div>
   );

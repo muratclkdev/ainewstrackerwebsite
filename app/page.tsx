@@ -56,7 +56,6 @@ export default function Home() {
         <NewsSection lang={lang} />
         <PoweredBy lang={lang} />
         <FeedbackSection lang={lang} />
-        <Footer lang={lang} />
       </div>
       <CookieConsent lang={lang} />
     </main>
