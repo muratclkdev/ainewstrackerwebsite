@@ -1,22 +1,12 @@
 import "./globals.css";
-import type { Metadata } from "next";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
-
+import Footer from "./components/Footer/Footer";
 import { Suspense } from "react";
+import { metadata } from "./metadata";
 
-export const metadata: Metadata = {
-  title: "AI News Tracker",
-  description: "AI News Tracker - Yapay Zeka Haberleri",
-  metadataBase: new URL('https://ainewstracker.com'),
-  alternates: {
-    canonical: '/',
-  },
-  verification: {
-    google: "ca-pub-2763920619272344",
-  }
-};
+export { metadata };
 
 export default function RootLayout({
   children,
@@ -35,7 +25,7 @@ export default function RootLayout({
         <CountdownTimer lang="tr" />
         <Providers>
           {children}
-
+          <Footer lang="tr" />
         </Providers>
       </body>
     </html>

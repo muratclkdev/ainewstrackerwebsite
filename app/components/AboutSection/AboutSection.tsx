@@ -17,7 +17,7 @@ const texts = {
       "AI News Tracker, kripto para piyasalarındaki haberleri yapay zeka destekli olarak takip eden ve analiz eden bir platformdur.",
       "Platform, ChatGPT ile güçlendirilmiş haber analizi ve özetleme özelliği sayesinde, kullanıcılara önemli gelişmeleri hızlı ve anlaşılır bir şekilde sunar.",
       "Gerçek zamanlı haber takibi ve bildirimler sayesinde, kullanıcılar piyasadaki gelişmelerden anında haberdar olur.",
-      "Kişiselleştirilebilir haber akışı ve filtreler ile kullanıcılar, ilgilendikleri konulara odaklanabilir."
+      "Tek tıkla haberle ilişki olan coin için Binance üzerinden spot işlem gerçekleştirebilirsiniz."
     ]
   },
   en: {
@@ -26,7 +26,7 @@ const texts = {
       "AI News Tracker is a platform that tracks and analyzes crypto market news with AI support.",
       "Thanks to its ChatGPT-powered news analysis and summarization feature, the platform presents important developments to users quickly and comprehensibly.",
       "With real-time news tracking and notifications, users are instantly informed about market developments.",
-      "With customizable news feed and filters, users can focus on topics they are interested in."
+      "You can perform spot transactions for coins related to news with a single click on Binance."
     ]
   }
 };
