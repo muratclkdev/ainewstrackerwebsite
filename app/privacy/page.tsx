@@ -1,6 +1,8 @@
 "use client";
 
 import PrivacyPage from '../components/privacy/PrivacyPage';
+import { useState } from 'react';
+import type { Lang } from '../types';
 
 const content = {
   tr: {
@@ -68,5 +70,11 @@ const content = {
 };
 
 export default function Privacy() {
-  return <PrivacyPage lang="tr" content={content} />;
-} 
+  const [currentLang, setCurrentLang] = useState<Lang>("en");
+
+  return (
+    <>
+      <PrivacyPage lang={currentLang} content={content} onLanguageChange={setCurrentLang} />
+    </>
+  );
+}

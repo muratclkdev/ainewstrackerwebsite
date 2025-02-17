@@ -33,7 +33,7 @@ const texts = {
 };
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("tr");
+  const [lang, setLang] = useState<Lang>("en");
   const [theme, setTheme] = useState<Theme>("light");
 
   return (
@@ -57,6 +57,7 @@ export default function Home() {
         <PoweredBy lang={lang} />
         <FeedbackSection lang={lang} />
       </div>
+      <Footer lang={lang} />
       <CookieConsent lang={lang} />
     </main>
   );

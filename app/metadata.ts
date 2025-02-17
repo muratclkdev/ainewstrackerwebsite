@@ -9,6 +9,26 @@ export const metadata: Metadata = {
     template: `%s | AI News Tracker`,
   },
   description,
+  icons: {
+    icon: [
+      {
+        url: "/images/logo-black.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/images/logo-white.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    shortcut: ["/images/logo-black.png"],
+    apple: [
+      {
+        url: "/images/logo-black.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
   keywords: [
     "kripto haber",
     "yapay zeka",
@@ -58,7 +78,7 @@ export const metadata: Metadata = {
     siteName: "AI News Tracker",
     images: [
       {
-        url: "/images/og-image.jpg", // Eğer varsa
+        url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "AI News Tracker",
@@ -69,8 +89,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/images/twitter-image.jpg"], // Eğer varsa
-    creator: "@ainewstracker", // Twitter hesabınız varsa
+    images: ["/images/twitter-image.jpg"],
+    creator: "@ainewstracker",
   },
   alternates: {
     canonical: "https://ainewstracker.xyz",
@@ -83,4 +103,4 @@ export const metadata: Metadata = {
   verification: {
     google: "ca-pub-2763920619272344",
   },
-}; 
+};

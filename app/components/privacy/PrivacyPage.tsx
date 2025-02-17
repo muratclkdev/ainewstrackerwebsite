@@ -7,6 +7,7 @@ import { fadeInUp } from '../../constants';
 import { CustomCursor } from '../../components/CustomCursor';
 import { YandexMetrica } from '../../components/analytics/YandexMetrica';
 import { CookieConsent } from '../../components/analytics/CookieConsent';
+import Footer from "../../components/Footer/Footer";
 import type { Lang, Theme } from "../../types";
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
@@ -14,11 +15,17 @@ import { useTheme } from 'next-themes';
 interface PrivacyPageProps {
   lang: Lang;
   content: any;
+  onLanguageChange: (lang: Lang) => void;
 }
 
-export const PrivacyPage = ({ lang, content }: PrivacyPageProps) => {
+export const PrivacyPage = ({ lang, content, onLanguageChange }: PrivacyPageProps) => {
   const [currentLang, setLang] = useState<Lang>(lang);
   const { theme, setTheme } = useTheme();
+
+  const handleLanguageChange = (newLang: Lang) => {
+    setLang(newLang);
+    onLanguageChange(newLang);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,12 +33,11 @@ export const PrivacyPage = ({ lang, content }: PrivacyPageProps) => {
       <CustomCursor />
       <Header 
         lang={currentLang} 
-        onLanguageChange={(newLang: Lang) => setLang(newLang)}
+        onLanguageChange={handleLanguageChange}
         theme={theme as Theme}
         onThemeChange={(newTheme: Theme) => setTheme(newTheme)}
       />
       
-      {/* Main Content */}
       <main className="pt-[220px] container mx-auto px-4 pb-12">
         <motion.div
           initial="hidden"
@@ -70,9 +76,10 @@ export const PrivacyPage = ({ lang, content }: PrivacyPageProps) => {
         </motion.div>
       </main>
 
+      <Footer lang={currentLang} />
       <CookieConsent lang={currentLang} />
     </div>
   );
 };
 
-export default PrivacyPage; 
+export default PrivacyPage;

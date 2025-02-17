@@ -2,7 +2,6 @@ import "./globals.css";
 import { Providers } from "./providers";
 import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
-import Footer from "./components/Footer/Footer";
 import { Suspense } from "react";
 import { metadata } from "./metadata";
 
@@ -14,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="google-adsense-account" content="ca-pub-2763920619272344" />
         <Suspense fallback={null}>
@@ -22,10 +21,9 @@ export default function RootLayout({
         </Suspense>
       </head>
       <body className="bg-background" suppressHydrationWarning={true}>
-        <CountdownTimer lang="tr" />
+        <CountdownTimer lang="en" />
         <Providers>
           {children}
-          <Footer lang="tr" />
         </Providers>
       </body>
     </html>
