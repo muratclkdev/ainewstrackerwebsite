@@ -14,7 +14,6 @@ const texts = {
   tr: {
     title: "Haber Kaynakları",
     factualTitle: "Doğrulanmış Haberler",
-    factualDesc: "Güvenilir kaynaklardan doğrulanmış haberler",
     investTitle: "Yatırım Fırsatları",
     investDesc: "Potansiyel yatırım fırsatlarını kaçırmayın",
     listingTitle: "Borsa Listeleme",
@@ -25,7 +24,6 @@ const texts = {
   en: {
     title: "News Sources",
     factualTitle: "Verified News",
-    factualDesc: "Verified news from reliable sources",
     investTitle: "Investment Opportunities",
     investDesc: "Don't miss potential investment opportunities",
     listingTitle: "Exchange Listing",
@@ -151,14 +149,7 @@ export default function NewsSection({ lang }: NewsSectionProps) {
             {texts[lang].factualTitle}
           </motion.p>
 
-          <motion.p 
-            className="text-lg mb-16 text-text/80"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            {texts[lang].factualDesc}
-          </motion.p>
+
 
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-8"

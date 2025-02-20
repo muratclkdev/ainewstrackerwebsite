@@ -25,7 +25,8 @@ export function middleware(request: NextRequest) {
     'Content-Security-Policy',
     `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.yandex.ru *.emailjs.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' *.yandex.ru *.emailjs.com static.ads-twitter.com analytics.twitter.com *.twitter.com;
+      connect-src 'self' *.twitter.com analytics.twitter.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https: blob:;
       font-src 'self';
@@ -53,4 +54,4 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
-}; 
+};

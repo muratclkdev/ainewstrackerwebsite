@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Lang } from '../../types';
 import { useTheme } from 'next-themes';
+import TwitterEvent from '../analytics/TwitterEvents';
 
 interface HeroProps {
   lang: Lang;
@@ -34,18 +35,17 @@ const texts = {
 
 export const Hero = ({ lang }: HeroProps) => {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-
   const [showTelegramModal, setShowTelegramModal] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showTwitterEvent, setShowTwitterEvent] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  useEffect(() => { setMounted(true); }, []);
   if (!mounted) return null;
 
   const handleTelegramClick = () => {
-    // Yandex Metrika olay izleme
     if (typeof window !== 'undefined' && (window as any).ym) {
       (window as any).ym(99681044, 'reachGoal', 'telegram_button_click');
     }
@@ -61,16 +61,14 @@ export const Hero = ({ lang }: HeroProps) => {
       const data = await res.json();
       if (res.ok && data.success) {
         const telegramLink = data.inviteLink;
-        // Mobil cihaz kontrolü
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
         if (isMobile) {
-          // Mobil cihazlar için doğrudan yönlendirme
           window.location.href = telegramLink;
         } else {
-          // Masaüstü için yeni sekmede açma
           window.open(telegramLink, '_blank', 'noopener,noreferrer');
         }
+        setShowTwitterEvent(true);
       } else {
         alert(lang === 'tr' ? 'Davet linki alınamadı: ' + (data.error || 'Bilinmeyen hata') : 'Could not get invite link: ' + (data.error || 'Unknown error'));
       }
@@ -83,6 +81,7 @@ export const Hero = ({ lang }: HeroProps) => {
 
   return (
     <section className={`relative min-h-screen ${isDark ? 'bg-[#0f1117]' : 'bg-gray-50'} overflow-hidden`}>
+      {showTwitterEvent && <TwitterEvent eventId="tw-p5rrf-p5rrh" />}
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col md:flex-row items-center justify-between gap-16">
           {/* Sol Kısım - Başlık ve Buton */}
