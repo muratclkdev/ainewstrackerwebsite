@@ -46,8 +46,7 @@ export default function Home() {
         onLanguageChange={setLang}
       />
 
-      {/* Ana İçerik Bölümü */}
-      <div className="pt-[160px]">
+      <div className="pt-24">
         <Hero lang={lang} />
         <AllInOne lang={lang} />
         <Features lang={lang} />

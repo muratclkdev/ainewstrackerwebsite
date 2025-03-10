@@ -50,11 +50,11 @@ html {
   @apply px-4 mx-auto max-w-7xl;
 }
 
-/* Navbar ve Countdown için özel stiller */
+/* Navbar için özel stiller */
 .navbar {
-  @apply fixed top-[88px] left-0 right-0 z-50 backdrop-blur-sm border-b border-border;
+  @apply fixed top-0 left-0 right-0 z-50 backdrop-blur-sm border-b border-border;
   background-color: var(--background);
-  opacity: 0.8;
+  opacity: 0.95;
 }
 
 .navbar-logo {

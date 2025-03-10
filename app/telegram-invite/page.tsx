@@ -9,7 +9,7 @@ function TelegramInviteContent() {
   const inviteLink = searchParams ? searchParams.get('invite') : null;
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background pt-24 flex items-center justify-center p-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,11 +52,11 @@ function TelegramInviteContent() {
 export default function TelegramInvitePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background pt-24 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     }>
       <TelegramInviteContent />
     </Suspense>
   );
-} 
+}

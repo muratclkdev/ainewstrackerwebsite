@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Providers } from "./providers";
-import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
 import YandexMetrica from "./components/analytics/YandexMetrica";
 import Script from "next/script";
 import { Suspense } from "react";
@@ -32,7 +31,6 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="bg-background" suppressHydrationWarning={true}>
-        <CountdownTimer lang="en" />
         <Providers>
           {children}
         </Providers>

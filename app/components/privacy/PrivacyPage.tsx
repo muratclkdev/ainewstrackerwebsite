@@ -38,7 +38,7 @@ export const PrivacyPage = ({ lang, content, onLanguageChange }: PrivacyPageProp
         onThemeChange={(newTheme: Theme) => setTheme(newTheme)}
       />
       
-      <main className="pt-[220px] container mx-auto px-4 pb-12">
+      <main className="pt-24 container mx-auto px-4 pb-12">
         <motion.div
           initial="hidden"
           animate="visible"
